@@ -1,6 +1,6 @@
-# Sandbox Unlocked (⚠️ WORK IN PROGRESS ⚠️)
+# Hermanos Override (⚠️ WORK IN PROGRESS ⚠️)
 
-**Sandbox Unlocked** is a customizable, offline trainer launcher designed for single-player games. It provides a clean interface for toggling cheats, editing in-game values, and unlocking sandbox-style gameplay — all without relying on external platforms.
+**Hermanos Override** is a customizable, offline trainer launcher designed for single-player games. It provides a clean interface for toggling cheats, editing in-game values, and unlocking sandbox-style gameplay — all without relying on external platforms.
 
 ---
 
@@ -25,6 +25,8 @@ To build a sleek and personal trainer system that gives full control to the play
 
 - Cheat Engine (for address discovery)
 - Python / C#
+- React Electron
+- Flingtrainers
 
 ---
 
