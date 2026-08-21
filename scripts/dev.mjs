@@ -35,6 +35,12 @@ async function start() {
     format: 'cjs'
   });
 
+  const fs = await import('fs');
+  fs.writeFileSync(
+    path.join(rootDir, 'dist-electron/package.json'),
+    JSON.stringify({ type: 'commonjs' }, null, 2)
+  );
+
   // Start Vite dev server
   const server = await createServer({
     configFile: path.join(rootDir, 'vite.config.ts'),
