@@ -8,8 +8,8 @@ Update it whenever a meaningful task, phase, architectural decision, blocker, or
 
 ## Current State
 
-- Current phase: Phase 9 Complete — Modern Glassmorphism (Dark Theme Only) Overhaul Verified
-- Current task: UI/UX redesign complete and verified across all tests and builds
+- Current phase: Phase 10 Complete — Framer Motion & Dynamic Spring Physics Verified
+- Current task: Animations and spring physics fully integrated and verified across all test gates
 - Status: Complete
 - Last updated: 2026-08-21
 
@@ -17,7 +17,7 @@ Update it whenever a meaningful task, phase, architectural decision, blocker, or
 
 Discovered and inspected skills in workspace:
 - **Primary Design & Visual Architecture Skills for Revision:**
-  - `high-end-visual-design` (`.agents/skills/soft-skill`) — Vanguard UI architecture, Ethereal Glass texture archetype (OLED black `#06080d`, radial ambient mesh light, frosted `backdrop-blur-xl`, `border-white/10`, double-bezel concentric curves, button-in-button trailing pods).
+  - `high-end-visual-design` (`.agents/skills/soft-skill`) — Vanguard UI architecture, Ethereal Glass texture archetype, spring physics, fluid motion curves (`[0.16, 1, 0.3, 1]`), and button-in-button trailing pods.
   - `design-taste-frontend` (`.agents/skills/taste-skill`) — Anti-slop frontend engineering, shape consistency lock, pure dark theme lock, and viewport stability.
   - `stitch-design-taste` (`.agents/skills/stitch-skill`) — Semantic tokens, anti-cliché rules, precision monospace telemetry, and glassmorphism styling.
   - `frontend-design` (`.agents/skills/frontend-design`) — Distinctive visual identity, anti-template choices, and intentional typography.
@@ -34,14 +34,15 @@ Discovered and inspected skills in workspace:
 - Verified clean TypeScript compilation and production build.
 
 ### Phase 9 — UI/UX Anti-Slop Overhaul (Modern Glassmorphism — Dark Theme Only)
-- **Token Architecture (`src/renderer/index.css`):** Rebuilt design tokens for pure OLED dark baseline (`#06080d`), ambient radial mesh lighting, frosted glass panels (`backdrop-blur-xl bg-white/[0.04]`), double-bezel concentric borders (`border-white/10`), inner specular highlights (`shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]`), and calibrated OLED status lights (Emerald for Ready, Azure for Active, Amber for Relink, Rose for Missing Game).
-- **Glassmorphic UI Primitives (`src/renderer/components/ui/`):** Upgraded `Button`, `Input`, `Modal`, `Badge`, and `Toast` with frosted glass styling, tactile spring physics (`active:scale-[0.98]`), and crisp uppercase telemetry labels.
-- **Floating Header & Toolbar (`src/renderer/components/layout/Header.tsx`):** Designed floating frosted glass control bar with integrated search shortcut indicator (`Ctrl+K`), live status pill counters (`TOTAL`, `READY`, `ACTIVE`), and tactile primary CTA.
-- **Double-Bezel Game Cards (`src/renderer/components/library/GameCard.tsx`):** Nested double-bezel glass trays (outer tray + inner core), glowing icon boxes, monospace file path chips, pulsating PID indicators, and contextual action buttons with trailing icon pods.
-- **Tactile Empty & Search States (`src/renderer/components/library/EmptyLibrary.tsx`, `GameGrid.tsx`):** Ethereal frosted glass hero cards with ambient glows and clear recovery actions.
-- **Modern Dialogs (`src/renderer/components/forms/GameModal.tsx`, `DeleteConfirmModal.tsx`):** High-end frosted glass overlays with hardware-spec inputs, browse triggers, and prominent disk safety reassurance.
-- **Verification:** Verified with `npm run typecheck` (0 errors), `npm test` (36/36 tests passing), and `npm run build` (clean production output).
+- Rebuilt design tokens for pure OLED dark baseline (`#06080d`), frosted glass panels (`backdrop-blur-xl bg-white/[0.04]`), double-bezel concentric borders (`border-white/10`), inner specular highlights (`shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]`), and calibrated OLED status lights.
+- Upgraded UI primitives (`Button`, `Input`, `Modal`, `Badge`, `Toast`), double-bezel game cards, floating header with telemetry, and composed empty states.
+
+### Phase 10 — Framer Motion & Dynamic Spring Physics
+- **Ambient Refraction Lighting:** Floating and breathing ambient gradient light orbs in `Shell.tsx` creating natural dynamic highlights through frosted glass panels.
+- **Spring Physics Modals & Overlays:** Integrated `AnimatePresence` and spring-physics transitions (`type: 'spring', damping: 26, stiffness: 350`) in `Modal.tsx` and `Toast.tsx`.
+- **Card Micro-Physics & Fluid Layout:** Integrated `motion.div` with layout animations (`layout`, `AnimatePresence mode="popLayout"`) in `GameGrid.tsx` and hover elevation lifts (`whileHover={{ y: -3 }}`) on `GameCard.tsx`.
+- **Verification:** Verified with `npm run typecheck` (0 errors), `npm test` (36/36 tests passing), and `npm run build` (clean production build).
 
 ## Known Issues / Blockers
 
-None. The application is fully verified with the modern frosted glassmorphism dark theme.
+None. The application is fully animated with Framer Motion and verified.

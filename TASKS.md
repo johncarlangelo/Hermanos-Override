@@ -139,3 +139,12 @@ Do not mark parent tasks complete while child requirements remain unverified.
 - [x] Redesign Add/Edit Game Modal and Delete Confirmation as high-end frosted glass overlays with hardware-grade inputs and prominent disk safety indicators.
 - [x] Verify responsive layout across compact, medium, and ultra-wide desktop viewports without blur performance penalties.
 - [x] Run full verification test suite (`npm test`), TypeScript check (`npm run typecheck`), and production build (`npm run build`).
+
+# Phase 10 — Framer Motion & Dynamic Spring Physics
+
+- [x] Integrate Framer Motion ambient background mesh with floating refraction lighting.
+- [x] Implement staggered entrance animations and layout transitions (`AnimatePresence`, `layout`) in GameGrid.
+- [x] Implement spring physics and micro-interactions on GameCard (elevation hover, activity pulse).
+- [x] Implement spring physics on Modal dialog entrances and dismissals (`AnimatePresence`).
+- [x] Implement spring slide-in and exit animations on Toast notifications.
+- [x] Verify test suite and TypeScript compilation with zero animation-induced test regressions.

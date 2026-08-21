@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import type { GameWithStatus } from '../../../shared/types';
 import { StatusBadge } from './StatusBadge';
 import { Button } from '../ui/Button';
@@ -114,7 +115,15 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
   };
 
   return (
-    <div className="group relative rounded-2xl p-1 bg-white/[0.02] border border-white/[0.08] hover:border-sky-500/40 transition-all duration-300 hover:shadow-[0_16px_48px_rgba(0,0,0,0.7),0_0_24px_rgba(56,189,248,0.15)] flex flex-col">
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      whileHover={{ y: -3 }}
+      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+      className="group relative rounded-2xl p-1 bg-white/[0.02] border border-white/[0.08] hover:border-sky-500/40 transition-colors duration-300 hover:shadow-[0_16px_48px_rgba(0,0,0,0.7),0_0_24px_rgba(56,189,248,0.15)] flex flex-col"
+    >
       <div className="rounded-[calc(1rem-2px)] bg-[#0c111e]/90 backdrop-blur-xl p-4.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] flex flex-col justify-between flex-1">
         {/* Top Info Header */}
         <div>
@@ -202,6 +211,6 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
