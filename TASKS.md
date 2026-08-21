@@ -26,16 +26,16 @@ Do not mark parent tasks complete while child requirements remain unverified.
 
 # Phase 1 — Foundation
 
-- [ ] Establish the clean application structure.
-- [ ] Establish Electron main/preload/renderer boundaries.
-- [ ] Establish secure IPC conventions.
-- [ ] Establish TypeScript configuration.
-- [ ] Establish application-wide design tokens/design system.
-- [ ] Establish typography, spacing, component, and interaction conventions.
-- [ ] Establish light/dark theme infrastructure.
-- [ ] Build the new application shell from scratch.
-- [ ] Create the initial empty library experience.
-- [ ] Verify the app starts without runtime errors.
+- [x] Establish the clean application structure.
+- [x] Establish Electron main/preload/renderer boundaries.
+- [x] Establish secure IPC conventions.
+- [x] Establish TypeScript configuration.
+- [x] Establish application-wide design tokens/design system.
+- [x] Establish typography, spacing, component, and interaction conventions.
+- [x] Establish light/dark theme infrastructure.
+- [x] Build the new application shell from scratch.
+- [x] Create the initial empty library experience.
+- [x] Verify the app starts without runtime errors.
 
 # Phase 2 — Persistence
 
