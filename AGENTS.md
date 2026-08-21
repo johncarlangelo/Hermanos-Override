@@ -93,6 +93,49 @@ Treat subagent output as evidence, analysis, or recommendations rather than unqu
 
 The main agent remains responsible for integrating subagent findings and verifying the final implementation.
 
+## Git and Commit Policy
+
+Use Git as persistent project history and a recovery mechanism.
+
+When a meaningful task or logical unit of work is completed and verified,
+create a Git commit.
+
+All commits MUST use a concise Conventional Commits one-line format:
+
+`<type>: <short imperative description>`
+
+Examples:
+
+- `feat: add game library persistence`
+- `feat: implement trainer process control`
+- `fix: handle missing trainer paths`
+- `refactor: simplify IPC boundaries`
+- `test: add persistence verification`
+- `docs: update project progress`
+
+Commit messages MUST:
+
+- be a single line;
+- use a valid Conventional Commits type;
+- contain a concise imperative description;
+- describe the actual change;
+- avoid paragraphs, bullet points, bodies, or multi-line commit messages.
+
+Do not create verbose commit messages.
+
+Do not commit incomplete or unverified work.
+
+Before committing, inspect the diff and ensure only the intended changes are
+included.
+
+Keep commits small and logically meaningful so individual changes can be
+reverted or inspected independently.
+
+When Git publishing is explicitly enabled for this project, push verified
+commits to the configured remote after committing.
+
+Do not rewrite published history unless explicitly required.
+
 ## Autonomous Loop Behavior
 
 When operating inside an autonomous loop:
@@ -120,6 +163,17 @@ For each task:
 12. Only then proceed to the next unfinished task.
 
 Do not use conversational momentum as evidence that a task is complete. Repository state and verification results are the source of truth.
+
+## Permission Mode
+
+This project may be operated in an autonomous permission-bypass mode.
+
+When operating in this mode, do not interpret automatic permission approval
+as approval to violate project scope, verification requirements, security
+boundaries, or the instructions in this file.
+
+Permission bypass only removes interactive approval prompts. It does not
+remove the requirement to verify changes before considering them complete.
 
 ## Definition of Done
 

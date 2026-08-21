@@ -5,7 +5,6 @@ tools:
   - view_file
   - grep_search
   - run_command
-  - browser
 subagent: true
 ---
 

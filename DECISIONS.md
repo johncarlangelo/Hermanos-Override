@@ -68,3 +68,17 @@ The repository's tests, build checks, application interaction checks, and verifi
 Persistent project files are treated as external memory for long-running agent workflows.
 
 Agents should be able to resume work after context compaction or a new session by reading the project state files and inspecting the repository.
+
+## Decision 011 — Custom Asset Protocol (`app-asset://`)
+
+Register `app-asset://` custom protocol in Electron main process using `net.fetch(pathToFileURL(...))` for secure, cross-origin-safe icon loading under `webSecurity: true`.
+
+Reason:
+Direct `file://` image references fail under standard Chromium `webSecurity: true` restrictions in development or modern Electron builds.
+
+## Decision 012 — Native Windows Process Tree Termination
+
+Use Windows `taskkill /PID <pid> /T /F` for stopping trainer processes.
+
+Reason:
+Many PC game trainers spawn sub-processes or companion wrappers. Killing the entire process tree cleanly ensures no orphaned trainer hooks remain active.
