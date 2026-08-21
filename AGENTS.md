@@ -26,31 +26,53 @@ The existing UI is disposable. Inspect the repository first, but do not preserve
 
 ## Skills
 
-Skills are an active part of the development workflow.
+Skills are an active and first-class part of the development workflow.
 
 Before beginning any non-trivial task:
 
-1. Inspect the skills available in the current Antigravity environment.
-2. Identify which available skills are relevant to the current task.
-3. Use relevant skills when they provide specialized guidance, workflows, or capabilities.
-4. Follow the instructions and constraints of any skill that is used.
-5. Do not invoke unrelated skills merely for the sake of using them.
-6. Do not invent or assume skills that are not actually available.
-7. If no relevant skill exists, proceed using the project documentation and normal engineering practices.
+1. Inspect the skills actually discoverable by the current Antigravity workspace/session.
+
+2. Inspect workspace-local skills under:
+   `.agents/skills/`
+
+3. Identify which available skills are relevant to the current task.
+
+4. Use relevant skills when they provide specialized guidance, workflows, or capabilities.
+
+5. Follow the instructions and constraints of any skill that is used.
+
+6. Do not invoke unrelated skills merely for the sake of using them.
+
+7. Do not invent, assume, or claim to have used skills that are not actually available
+   or discoverable in the current session.
+
+8. If a relevant skill is expected but not discoverable, document that limitation
+   in `PROGRESS.md` rather than silently pretending the skill was used.
+
+9. If no relevant skill exists, proceed using the project documentation and normal
+   engineering practices.
+
+During Phase 0, explicitly inspect and record the relevant discoverable skills
+in `PROGRESS.md`. This establishes the skill environment for the rest of the
+autonomous run.
 
 Skills may be relevant for:
 
-* UI/UX and visual design
-* Electron development
-* React/TypeScript development
-* testing and verification
-* accessibility
-* architecture
-* debugging
-* documentation
-* repository/project management
+- UI/UX and visual design
+- Electron development
+- React/TypeScript development
+- testing and verification
+- accessibility
+- architecture
+- debugging
+- documentation
+- repository/project management
 
-When a relevant skill exists, prefer using it rather than recreating specialized guidance from scratch.
+When a relevant skill exists, prefer using it rather than recreating specialized
+guidance from scratch.
+
+Workspace-local skills under `.agents/skills/` should be treated as
+project-specific capabilities and should be considered during task planning.
 
 ## UI/UX Independence
 
@@ -100,6 +122,33 @@ Use Git as persistent project history and a recovery mechanism.
 When a meaningful task or logical unit of work is completed and verified,
 create a Git commit.
 
+### Commit Granularity
+
+Do not defer multiple completed phases into a single final commit.
+
+A completed phase is a mandatory Git checkpoint.
+
+Before proceeding from Phase N to Phase N+1:
+
+1. Verify all completed tasks in Phase N.
+2. Inspect the Git diff and confirm the changes belong to the completed phase.
+3. Create one or more commits representing the meaningful logical units
+   completed during that phase.
+4. Confirm the committed changes are present in Git history.
+5. Confirm the working tree is clean, unless intentionally uncommitted changes
+   are explicitly documented.
+6. Only then begin the next phase.
+
+At minimum, each completed implementation phase should have its own commit when
+that phase produces repository changes.
+
+Do not create artificial commits merely to increase the number of commits.
+Commit boundaries must represent meaningful, verified changes.
+
+Do not accumulate multiple completed phases and commit them together.
+
+### Conventional Commit Format
+
 All commits MUST use a concise Conventional Commits one-line format:
 
 `<type>: <short imperative description>`
@@ -108,6 +157,8 @@ Examples:
 
 - `feat: add game library persistence`
 - `feat: implement trainer process control`
+- `feat: build game library interface`
+- `feat: add executable path detection`
 - `fix: handle missing trainer paths`
 - `refactor: simplify IPC boundaries`
 - `test: add persistence verification`
@@ -115,26 +166,31 @@ Examples:
 
 Commit messages MUST:
 
-- be a single line;
+- be exactly one line;
 - use a valid Conventional Commits type;
 - contain a concise imperative description;
 - describe the actual change;
-- avoid paragraphs, bullet points, bodies, or multi-line commit messages.
+- avoid paragraphs, bullet points, bodies, or multi-line messages.
 
 Do not create verbose commit messages.
 
 Do not commit incomplete or unverified work.
 
-Before committing, inspect the diff and ensure only the intended changes are
-included.
+Before committing, inspect the diff and ensure only the intended verified
+changes are included.
 
 Keep commits small and logically meaningful so individual changes can be
 reverted or inspected independently.
+
+### Publishing
 
 When Git publishing is explicitly enabled for this project, push verified
 commits to the configured remote after committing.
 
 Do not rewrite published history unless explicitly required.
+
+Pushing does not replace the requirement to maintain meaningful local commit
+boundaries.
 
 ## Autonomous Loop Behavior
 

@@ -136,7 +136,7 @@ export class TrainerManager {
       child.on('exit', handleExit);
       child.on('close', handleExit);
 
-      child.on('error', (err) => {
+      child.on('error', (err: Error) => {
         console.error(`Trainer process error for game ${gameId}:`, err);
         this.runningTrainers.delete(gameId);
         this.notifyListeners({

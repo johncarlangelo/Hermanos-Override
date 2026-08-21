@@ -22,6 +22,8 @@ Pay particular attention to:
 - status visibility
 - empty states
 - loading/error feedback
+- skeleton loading
+- framer motion
 - dialog quality
 - light/dark themes
 - accessibility
