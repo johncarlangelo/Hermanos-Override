@@ -80,15 +80,15 @@ Do not mark parent tasks complete while child requirements remain unverified.
 
 # Phase 5 — Trainer Process Management
 
-- [ ] Implement trainer process launch.
-- [ ] Validate launch failures.
-- [ ] Track the actual process.
-- [ ] Synchronize running state with the process.
-- [ ] Implement Stop Trainer.
-- [ ] Detect unexpected trainer exit.
-- [ ] Return to the correct non-running status.
-- [ ] Handle already-running / duplicate-launch edge cases.
-- [ ] Handle process termination errors safely.
+- [x] Implement trainer process launch.
+- [x] Validate launch failures.
+- [x] Track the actual process.
+- [x] Synchronize running state with the process.
+- [x] Implement Stop Trainer.
+- [x] Detect unexpected trainer exit.
+- [x] Return to the correct non-running status.
+- [x] Handle already-running / duplicate-launch edge cases.
+- [x] Handle process termination errors safely.
 
 # Phase 6 — Integration Verification
 
