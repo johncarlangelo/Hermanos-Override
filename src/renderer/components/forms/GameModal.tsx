@@ -173,22 +173,22 @@ export const GameModal: React.FC<GameModalProps> = ({
         </>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Contextual Banner for Missing Game / Trainer */}
+      <form onSubmit={handleSubmit} className="space-y-4.5">
+        {/* Contextual Warning Banner for Missing Files */}
         {gameToEdit?.status === 'missing_game' && (
-          <div className="flex items-start gap-2.5 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-500">
-            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+          <div className="flex items-start gap-3 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300 shadow-[0_0_16px_rgba(244,63,94,0.15)]">
+            <AlertTriangle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
             <p>
-              <strong>Missing Game Executable:</strong> The configured game .exe file was not found on your system. Please locate the new file path below.
+              <strong className="font-semibold text-rose-200">Missing Game Executable:</strong> The configured game .exe file was not found on your filesystem. Please select the updated executable path below.
             </p>
           </div>
         )}
 
         {gameToEdit?.status === 'missing_trainer' && (
-          <div className="flex items-start gap-2.5 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-500">
-            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+          <div className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-300 shadow-[0_0_16px_rgba(245,158,11,0.15)]">
+            <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
             <p>
-              <strong>Missing Trainer Executable:</strong> The configured trainer .exe file was not found at its path. Please select the updated location or clear the field.
+              <strong className="font-semibold text-amber-200">Missing Trainer Executable:</strong> The configured trainer .exe file was not found at its path. Please select the new file location or clear the field.
             </p>
           </div>
         )}
@@ -223,7 +223,7 @@ export const GameModal: React.FC<GameModalProps> = ({
               type="button"
               variant="secondary"
               size="sm"
-              leftIcon={<Folder className="w-3.5 h-3.5" />}
+              leftIcon={<Folder className="w-3.5 h-3.5 text-sky-400" />}
               onClick={handleBrowseGameExe}
             >
               Browse
@@ -244,7 +244,7 @@ export const GameModal: React.FC<GameModalProps> = ({
               type="button"
               variant="secondary"
               size="sm"
-              leftIcon={<Folder className="w-3.5 h-3.5" />}
+              leftIcon={<Folder className="w-3.5 h-3.5 text-sky-400" />}
               onClick={handleBrowseTrainerExe}
             >
               Browse
@@ -254,8 +254,8 @@ export const GameModal: React.FC<GameModalProps> = ({
 
         {/* Custom Icon Path */}
         <Input
-          label="Game Icon (Optional)"
-          placeholder="Path to icon or image (.png, .ico, .jpg)"
+          label="Custom Game Icon (Optional)"
+          placeholder="Path to icon image (.png, .ico, .jpg)"
           value={iconPath}
           onChange={(e) => setIconPath(e.target.value)}
           leftIcon={<ImageIcon className="w-4 h-4" />}
@@ -264,7 +264,7 @@ export const GameModal: React.FC<GameModalProps> = ({
               type="button"
               variant="secondary"
               size="sm"
-              leftIcon={<Folder className="w-3.5 h-3.5" />}
+              leftIcon={<Folder className="w-3.5 h-3.5 text-sky-400" />}
               onClick={handleBrowseIcon}
             >
               Browse

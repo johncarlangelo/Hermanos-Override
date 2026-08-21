@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLibrary } from '../../context/LibraryContext';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from '../ui/Button';
-import { Plus, Search, RefreshCw, X, Shield } from 'lucide-react';
+import { Plus, Search, RefreshCw, X, ShieldAlert } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const {
@@ -15,93 +15,119 @@ export const Header: React.FC = () => {
     setIsAddModalOpen
   } = useLibrary();
 
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Global Ctrl+K / Cmd+K search shortcut listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const isFiltering = Boolean(searchQuery.trim());
+  const readyCount = games.filter(g => g.status === 'ready').length;
+  const runningCount = games.filter(g => g.status === 'trainer_running').length;
 
   return (
-    <header className="sticky top-0 z-30 bg-[var(--bg-secondary)]/90 backdrop-blur-md border-b border-[var(--border-color)] px-6 py-3.5">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        {/* Brand & Stats */}
-        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm">
-              <Shield className="w-4 h-4" />
+    <header className="px-6 pt-4">
+      <div className="bg-[#0b101c]/80 backdrop-blur-2xl border border-white/10 rounded-2xl p-3.5 sm:px-5 shadow-[0_12px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.08)] flex flex-col lg:flex-row items-center justify-between gap-4">
+        {/* Brand & Telemetry */}
+        <div className="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-start">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(56,189,248,0.4)] border border-sky-300/30">
+              <ShieldAlert className="w-5 h-5 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-base font-bold text-[var(--text-primary)] tracking-tight">
+                <h1 className="text-sm font-bold text-white tracking-wider font-mono">
                   Hermanos Override
                 </h1>
-                <span className="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-[var(--bg-tertiary)] text-[var(--text-muted)] border border-[var(--border-color)]">
-                  MVP
+                <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30 tracking-widest uppercase">
+                  OLED Glass
                 </span>
               </div>
-              <p className="text-[11px] text-[var(--text-muted)]">
-                Offline Trainer Manager
+              <p className="text-[11px] text-slate-400 font-medium">
+                Offline Trainer Management Console
               </p>
             </div>
           </div>
 
-          <div className="hidden sm:flex items-center gap-1.5 pl-3 border-l border-[var(--border-color)] text-xs text-[var(--text-secondary)]">
-            {isFiltering ? (
-              <>
-                <span className="font-semibold text-[var(--text-primary)]">{filteredGames.length}</span>
-                <span>of</span>
-                <span className="font-semibold text-[var(--text-primary)]">{games.length}</span>
-                <span>{games.length === 1 ? 'game' : 'games'}</span>
-              </>
-            ) : (
-              <>
-                <span className="font-semibold text-[var(--text-primary)]">{games.length}</span>
-                <span>{games.length === 1 ? 'game' : 'games'}</span>
-              </>
+          {/* Telemetry Counter Pills */}
+          <div className="hidden sm:flex items-center gap-2 pl-4 border-l border-white/10 text-[11px] font-mono">
+            <div className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/5 flex items-center gap-1.5 text-slate-300">
+              <span className="text-slate-500 font-sans text-[10px] uppercase font-semibold">Total:</span>
+              <span className="font-bold text-white">{isFiltering ? `${filteredGames.length}/${games.length}` : games.length}</span>
+            </div>
+            {runningCount > 0 && (
+              <div className="px-2.5 py-1 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center gap-1.5 text-sky-300 shadow-[0_0_12px_rgba(56,189,248,0.2)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping" />
+                <span className="text-[10px] uppercase font-semibold font-sans">Active:</span>
+                <span className="font-bold">{runningCount}</span>
+              </div>
             )}
+            <div className="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-1.5 text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+              <span className="text-[10px] uppercase font-semibold font-sans">Ready:</span>
+              <span className="font-bold">{readyCount}</span>
+            </div>
           </div>
         </div>
 
-        {/* Search and Actions */}
-        <div className="flex items-center gap-2.5 w-full sm:w-auto">
-          {/* Search bar */}
-          <div className="relative flex-1 sm:w-64">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)] pointer-events-none" />
+        {/* Search and Action Toolbar */}
+        <div className="flex items-center gap-3 w-full lg:w-auto">
+          {/* Frosted Glass Search bar */}
+          <div className="relative flex-1 lg:w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             <input
+              ref={searchInputRef}
               type="text"
               aria-label="Search library"
               placeholder="Search library..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8.5 pr-8 py-1.5 text-xs bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+              className="w-full pl-9 pr-14 py-2 text-xs bg-black/40 border border-white/10 hover:border-white/20 focus:border-sky-400/80 focus:ring-2 focus:ring-sky-500/20 rounded-xl text-white placeholder-slate-500 transition-all duration-200 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"
             />
-            {searchQuery && (
+            {searchQuery ? (
               <button
                 onClick={() => setSearchQuery('')}
                 aria-label="Clear search"
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] p-0.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
+            ) : (
+              <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono text-slate-400 bg-white/[0.06] border border-white/10 px-1.5 py-0.5 rounded pointer-events-none">
+                Ctrl+K
+              </span>
             )}
           </div>
 
-          {/* Refresh button */}
+          {/* Refresh Action */}
           <button
             onClick={() => refreshGames()}
             disabled={isLoading}
             title="Refresh game library & status"
             aria-label="Refresh library"
-            className="p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] border border-[var(--border-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors disabled:opacity-50 cursor-pointer"
+            className="p-2.5 rounded-xl text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] active:bg-white/[0.12] border border-white/10 transition-all duration-200 disabled:opacity-40 cursor-pointer shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
           >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-sky-400' : ''}`} />
           </button>
 
-          {/* Theme toggle */}
+          {/* Theme Mode Indicator/Toggle */}
           <ThemeToggle />
 
-          {/* Add Game button */}
+          {/* Primary Add Game CTA */}
           <Button
-            size="sm"
+            size="md"
             variant="primary"
             leftIcon={<Plus className="w-4 h-4" />}
             onClick={() => setIsAddModalOpen(true)}
+            className="shrink-0"
           >
             Add Game
           </Button>

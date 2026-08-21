@@ -35,7 +35,7 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Remove Game"
+      title="Remove Game Configuration"
       maxWidth="md"
       footer={
         <>
@@ -47,28 +47,28 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
             onClick={handleConfirm}
             isLoading={isDeleting}
           >
-            Remove Game
+            Remove Record
           </Button>
         </>
       }
     >
       <div className="space-y-4">
-        <div className="flex items-start gap-3">
-          <div className="p-2 rounded-lg bg-red-500/10 text-red-500 shrink-0">
+        <div className="flex items-start gap-3.5">
+          <div className="p-2.5 rounded-xl bg-rose-500/15 text-rose-400 border border-rose-500/30 shrink-0 shadow-[0_0_16px_rgba(244,63,94,0.2)]">
             <AlertTriangle className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-sm font-medium text-[var(--text-primary)]">
-              Are you sure you want to remove <span className="font-bold">"{game.name}"</span> from Hermanos Override?
+            <p className="text-sm font-medium text-slate-200 leading-relaxed">
+              Are you sure you want to remove <span className="font-bold text-white">&ldquo;{game.name}&rdquo;</span> from Hermanos Override?
             </p>
           </div>
         </div>
 
-        {/* Reassurance banner for delete safety */}
-        <div className="flex items-start gap-2.5 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20 text-xs text-[var(--text-secondary)]">
-          <ShieldCheck className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-          <p>
-            <strong className="text-[var(--text-primary)]">Disk Safety Guarantee:</strong> This action will only remove the library configuration. It will <strong className="text-[var(--text-primary)]">never</strong> delete or modify any executable files from your drive.
+        {/* Disk Safety Guarantee Banner */}
+        <div className="flex items-start gap-3 p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/30 text-xs text-sky-200 shadow-[0_0_16px_rgba(56,189,248,0.12)]">
+          <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+          <p className="leading-relaxed">
+            <strong className="text-white font-semibold">Disk Safety Guarantee:</strong> This action only removes the entry from your local library configuration. It will <strong className="text-white">never</strong> delete, move, or modify any executable files on your hard drive.
           </p>
         </div>
       </div>

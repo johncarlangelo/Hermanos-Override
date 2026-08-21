@@ -130,12 +130,12 @@ Do not mark parent tasks complete while child requirements remain unverified.
 
 # Phase 9 — UI/UX Anti-Slop Overhaul (Modern Glassmorphism — Dark Theme Only)
 
-- [ ] Establish Modern Frosted Glassmorphism design tokens in `index.css` (pure dark OLED baseline `#06080d`, frosted glass surfaces, backdrop-filter blur `backdrop-blur-xl`, `border-white/10` hairlines, and `shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]` highlights).
-- [ ] Lock application to a pure dark theme (removing light mode artifacts and ensuring all components conform to dark frosted aesthetics).
-- [ ] Upgrade UI primitives (`Button`, `Input`, `Modal`, `Badge`, `Toast`) with glassmorphism styling, translucent fills, tactile micro-physics, and double-bezel concentric curves.
-- [ ] Redesign application Header and Navigation as a floating frosted glass control bar with integrated search shortcut pills (`Ctrl+K`), live status counter pills, and refined window drag controls.
-- [ ] Redesign GameCard with modern double-bezel frosted glass trays, glowing OLED status indicators, precision monospace telemetry, and translucent button-in-button action layout.
-- [ ] Redesign empty library and empty search result states with ethereal glass illustration cards, glowing accents, and crisp typography.
-- [ ] Redesign Add/Edit Game Modal and Delete Confirmation as high-end frosted glass overlays with hardware-grade inputs and prominent disk safety indicators.
-- [ ] Verify responsive layout across compact, medium, and ultra-wide desktop viewports without blur performance penalties.
-- [ ] Run full verification test suite (`npm test`), TypeScript check (`npm run typecheck`), and production build (`npm run build`).
+- [x] Establish Modern Frosted Glassmorphism design tokens in `index.css` (pure dark OLED baseline `#06080d`, frosted glass surfaces, backdrop-filter blur `backdrop-blur-xl`, `border-white/10` hairlines, and `shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]` highlights).
+- [x] Lock application to a pure dark theme (removing light mode artifacts and ensuring all components conform to dark frosted aesthetics).
+- [x] Upgrade UI primitives (`Button`, `Input`, `Modal`, `Badge`, `Toast`) with glassmorphism styling, translucent fills, tactile micro-physics, and double-bezel concentric curves.
+- [x] Redesign application Header and Navigation as a floating frosted glass control bar with integrated search shortcut pills (`Ctrl+K`), live status counter pills, and refined window drag controls.
+- [x] Redesign GameCard with modern double-bezel frosted glass trays, glowing OLED status indicators, precision monospace telemetry, and translucent button-in-button action layout.
+- [x] Redesign empty library and empty search result states with ethereal glass illustration cards, glowing accents, and crisp typography.
+- [x] Redesign Add/Edit Game Modal and Delete Confirmation as high-end frosted glass overlays with hardware-grade inputs and prominent disk safety indicators.
+- [x] Verify responsive layout across compact, medium, and ultra-wide desktop viewports without blur performance penalties.
+- [x] Run full verification test suite (`npm test`), TypeScript check (`npm run typecheck`), and production build (`npm run build`).
