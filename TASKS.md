@@ -92,16 +92,16 @@ Do not mark parent tasks complete while child requirements remain unverified.
 
 # Phase 6 — Integration Verification
 
-- [ ] Verify complete Add Game → Activate Trainer → Stop Trainer workflow.
-- [ ] Verify persistence after restart.
-- [ ] Verify missing trainer recovery.
-- [ ] Verify missing game recovery.
-- [ ] Verify invalid path/error handling.
-- [ ] Verify delete safety.
-- [ ] Verify search behavior.
-- [ ] Verify theme behavior.
-- [ ] Verify empty state.
-- [ ] Verify no critical console/runtime errors.
+- [x] Verify complete Add Game → Activate Trainer → Stop Trainer workflow.
+- [x] Verify persistence after restart.
+- [x] Verify missing trainer recovery.
+- [x] Verify missing game recovery.
+- [x] Verify invalid path/error handling.
+- [x] Verify delete safety.
+- [x] Verify search behavior.
+- [x] Verify theme behavior.
+- [x] Verify empty state.
+- [x] Verify no critical console/runtime errors.
 
 # Phase 7 — Dedicated Polish Pass
 
