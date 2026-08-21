@@ -8,8 +8,8 @@ Update it whenever a meaningful task, phase, architectural decision, blocker, or
 
 ## Current State
 
-- Current phase: Phase 3 Complete -> Entering Phase 4 (File Detection)
-- Current task: Phase 3 Product UI verified, proceeding to Phase 4 File Detection
+- Current phase: Phase 4 Complete -> Entering Phase 5 (Trainer Process Management)
+- Current task: Phase 4 File Detection verified, proceeding to Phase 5 Trainer Process Management
 - Status: Active
 - Last updated: 2026-08-21
 
@@ -61,11 +61,18 @@ Discovered and inspected skills in workspace:
 - Implemented robust loading and empty states across library and search.
 - Verified all UI interactions and component tests in `test/components/Library.test.tsx` and `test/verificationGates.test.tsx`.
 
+### Phase 4 — File Detection
+- Implemented native executable and icon selection via `DialogService` with file extension filtering.
+- Implemented dynamic status evaluation in `GameManager.evaluateStatus` for all 5 logical states (`missing_game`, `no_trainer`, `missing_trainer`, `ready`, `trainer_running`).
+- Implemented relink workflows in UI with contextual warning banners for missing games and missing trainers.
+- Verified that status is derived dynamically and survives external filesystem changes.
+- Verified Gates 7, 12, and 13 in `test/verificationGates.test.tsx`.
+
 ## Current Work
 
-### Phase 4 — File Detection
-- Verifying dynamic filesystem status detection (missing_game, no_trainer, missing_trainer, ready, trainer_running) and relinking workflows.
+### Phase 5 — Trainer Process Management
+- Verifying trainer process launch, tracking, termination (`taskkill /PID <pid> /T /F`), unexpected exit handling, and duplicate launch prevention.
 
 ## Known Issues / Blockers
 
-None. UI and persistence pass all verification checks.
+None. File detection and recovery workflows fully verified.

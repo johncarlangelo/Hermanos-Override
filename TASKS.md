@@ -69,14 +69,14 @@ Do not mark parent tasks complete while child requirements remain unverified.
 
 # Phase 4 — File Detection
 
-- [ ] Implement native game executable picker.
-- [ ] Implement native trainer executable picker.
-- [ ] Validate selected paths.
-- [ ] Detect missing game executable dynamically.
-- [ ] Detect missing trainer dynamically.
-- [ ] Implement relink trainer behavior.
-- [ ] Implement relink game behavior.
-- [ ] Verify status does not depend on persisted derived state.
+- [x] Implement native game executable picker.
+- [x] Implement native trainer executable picker.
+- [x] Validate selected paths.
+- [x] Detect missing game executable dynamically.
+- [x] Detect missing trainer dynamically.
+- [x] Implement relink trainer behavior.
+- [x] Implement relink game behavior.
+- [x] Verify status does not depend on persisted derived state.
 
 # Phase 5 — Trainer Process Management
 
