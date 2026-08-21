@@ -127,3 +127,15 @@ Do not mark parent tasks complete while child requirements remain unverified.
 - [x] Confirm no `[!]` blockers remain.
 - [x] Update `PROGRESS.md` with final verification results.
 - [x] Only then declare MVP complete.
+
+# Phase 9 — UI/UX Anti-Slop Overhaul (Frontend Skills Revision)
+
+- [ ] Establish "Machined Precision Tactical Console" design tokens in `index.css` (deep obsidian palette, specular highlights, double-bezel variables).
+- [ ] Upgrade UI primitives (`Button`, `Input`, `Modal`, `Badge`, `Toast`) with tactile micro-physics and double-bezel concentric curves.
+- [ ] Redesign application Header and Navigation with precision telemetry, live status pill counters, and search shortcut hints.
+- [ ] Redesign GameCard with double-bezel nested enclosure, typography hierarchy, telemetry badge, and button-in-button action layout.
+- [ ] Redesign empty library and empty search result states with composed tactical empty-state illustrations and crisp typography.
+- [ ] Redesign Add/Edit Game Modal and Delete Confirmation with hardware-spec form controls and clear disk safety indicators.
+- [ ] Verify light and dark mode aesthetic consistency across all views.
+- [ ] Verify responsive layout across compact, medium, and ultra-wide desktop viewports.
+- [ ] Run full verification test suite (`npm test`), TypeScript check (`npm run typecheck`), and production build (`npm run build`).

@@ -8,92 +8,43 @@ Update it whenever a meaningful task, phase, architectural decision, blocker, or
 
 ## Current State
 
-- Current phase: Phase 8 Complete — Hermanos Override MVP Complete
-- Current task: All tasks and verification gates verified
-- Status: Complete
+- Current phase: Phase 9 — UI/UX Anti-Slop Overhaul (Frontend Skills Revision)
+- Current task: Redesigning visual language, token architecture, double-bezel cards, and interactive ergonomics using installed frontend design skills
+- Status: Active
 - Last updated: 2026-08-21
 
 ## Discovered Skill Environment
 
 Discovered and inspected skills in workspace:
-- **Relevant for Hermanos Override UI/UX and Engineering:**
-  - `ui-ux-pro-max` (`.agents/skills/ui-ux-pro-max`) — UI/UX design intelligence, accessibility, dark mode contrast, layout discipline, and desktop ergonomics.
-  - `design-taste-frontend` (`.agents/skills/taste-skill`) — Anti-slop frontend engineering, avoiding AI-default styling, viewport stability, typography rigor.
-  - `frontend-design` (`.agents/skills/frontend-design`) — Distinctive visual identity, restraint, active voice, and clear hierarchy.
-  - `design-system` (`.agents/skills/design-system`) — Token architecture, semantic design variables, component styling conventions.
-  - `ui-styling` (`.agents/skills/ui-styling`) — Accessible components, Tailwind styling, consistent UI patterns.
-  - `full-output-enforcement` (`.agents/skills/output-skill`) — Full code generation discipline without placeholders.
+- **Primary Design & Visual Architecture Skills for Revision:**
+  - `frontend-design` (`.agents/skills/frontend-design`) — Distinctive visual identity, anti-template choices, and intentional typography.
+  - `high-end-visual-design` (`.agents/skills/soft-skill`) — Vanguard UI architecture, double-bezel nested enclosures, button-in-button patterns, macro-whitespace, and tactile micro-physics.
+  - `stitch-design-taste` (`.agents/skills/stitch-skill`) — Semantic tokens, banned AI clichés (no generic cards, no AI purple, no uncalibrated gradients), and precision monospace telemetry.
+  - `design-taste-frontend` (`.agents/skills/taste-skill`) — Anti-slop frontend engineering, shape and color consistency locks, and viewport stability.
+  - `ui-ux-pro-max` (`.agents/skills/ui-ux-pro-max`) — Ergonomic layout discipline, WCAG AA contrast compliance, keyboard focus rings, and safe interactions.
+  - `design-system` (`.agents/skills/design-system`) — Three-layer token architecture and semantic CSS variables.
 - **Other available skills indexed in workspace:**
-  - `academy-guide`, `agy-customizations`, `algorithmic-art`, `antigravity-guide`, `banner-design`, `brand`, `brand-guidelines`, `brandkit`, `brutalist-skill`, `canvas-design`, `claude-api`, `design`, `discernment-nudge`, `doc-coauthoring`, `docx`, `gpt-taste`, `high-end-visual-design`, `image-to-code`, `imagegen-frontend-mobile`, `imagegen-frontend-web`, `internal-comms`, `mcp-builder`, `minimalist-ui`, `pdf`, `pptx`, `redesign-existing-projects`, `skill-creator`, `slack-gif-creator`, `slides`, `stitch-design-taste`, `design-taste-frontend-v1`, `theme-factory`, `web-artifacts-builder`, `webapp-testing`, `xlsx`.
+  - `academy-guide`, `agy-customizations`, `algorithmic-art`, `antigravity-guide`, `banner-design`, `brand`, `brand-guidelines`, `brandkit`, `brutalist-skill`, `canvas-design`, `claude-api`, `design`, `discernment-nudge`, `doc-coauthoring`, `docx`, `gpt-taste`, `image-to-code`, `imagegen-frontend-mobile`, `imagegen-frontend-web`, `internal-comms`, `mcp-builder`, `minimalist-ui`, `pdf`, `pptx`, `redesign-existing-projects`, `skill-creator`, `slack-gif-creator`, `slides`, `design-taste-frontend-v1`, `theme-factory`, `web-artifacts-builder`, `webapp-testing`, `xlsx`.
 
 ## Completed Work
 
-### Phase 0 — Repository Reconnaissance
-- Inspected repository structure: Electron main process (`src/main`), React/TypeScript/Vite renderer (`src/renderer`), shared types/IPC definitions (`src/shared`), and automated tests (`test/`).
-- Verified dependencies: Node v22, TypeScript, Vite, Tailwind CSS v4, Electron, Vitest, React 19.
-- Verified absence of mock/fake datasets in runtime data paths.
-- Fixed `@types/node` configuration and callback typing in `trainerManager.ts`.
-- Verified clean build and full test execution: `npm run typecheck`, `npm run build`, and `npm test` (36 tests in 5 test suites) all passing.
+### Phases 0–8 — MVP Core Architecture & Gate Verification
+- Verified core functional foundation: secure Electron main/preload/renderer boundaries, typed IPC, atomic JSON storage in `%APPDATA%`, GameManager CRUD operations, delete safety guarantee, dynamic 5-state file detection, detached trainer process lifecycle control with Windows `taskkill` tree termination, crash recovery, search filtering, and light/dark theme persistence.
+- Verified test suite: 36 of 36 unit and gate tests passing across 5 test suites.
+- Verified clean TypeScript compilation and production build.
 
-### Phase 1 — Foundation
-- Verified clean application structure with strict Electron main/preload/renderer isolation boundaries.
-- Verified secure IPC conventions with typed channels in `src/shared/ipc.ts` and `src/shared/types.ts`.
-- Established application-wide design token system in `src/renderer/index.css` supporting light and dark themes.
-- Established UI components: Button, Input, Modal, Badge, Toast, Shell, and Header.
-- Established light/dark theme infrastructure with system preference listener and settings persistence via IPC.
-- Verified initial empty library view with primary Add Game call to action.
-- Executed and verified build, typecheck, and test suite across 5 test suites (36 tests passing).
+## Current Work
 
-### Phase 2 — Persistence
-- Defined and implemented core game model with stable randomUUID identifiers and ISO timestamp tracking.
-- Implemented atomic file write persistence under `%APPDATA%/Hermanos Override/data/games.json` and `settings.json`.
-- Implemented load-on-start and CRUD operations (createGame, updateGame, deleteGame) in GameManager.
-- Verified strict delete safety: deleting a library record never deletes or modifies files on disk.
-- Verified that transient runtime status (e.g. `status`, `trainerPid`) is stripped before persisting to JSON.
-- Verified unit test suites `test/storageService.test.ts` (5 tests) and `test/gameManager.test.ts` (8 tests).
-
-### Phase 3 — Product UI
-- Implemented professional desktop game library UI with responsive grid, card layout, and contextual actions.
-- Implemented status badges with visual color coding and subtle activity indicators.
-- Implemented case-insensitive search with count indicators and clear search recovery.
-- Implemented Add Game and Edit Game dialogs with path validation and native file browser integrations.
-- Implemented delete confirmation modal with prominent disk safety guarantee.
-- Implemented robust loading and empty states across library and search.
-- Verified all UI interactions and component tests in `test/components/Library.test.tsx` and `test/verificationGates.test.tsx`.
-
-### Phase 4 — File Detection
-- Implemented native executable and icon selection via `DialogService` with file extension filtering.
-- Implemented dynamic status evaluation in `GameManager.evaluateStatus` for all 5 logical states (`missing_game`, `no_trainer`, `missing_trainer`, `ready`, `trainer_running`).
-- Implemented relink workflows in UI with contextual warning banners for missing games and missing trainers.
-- Verified that status is derived dynamically and survives external filesystem changes.
-- Verified Gates 7, 12, and 13 in `test/verificationGates.test.tsx`.
-
-### Phase 5 — Trainer Process Management
-- Implemented trainer process launch using detached child process spawning and PID extraction.
-- Implemented duplicate launch prevention and safe error reporting.
-- Implemented Windows process tree termination via `taskkill /PID <pid> /T /F` with clean SIGKILL/SIGTERM fallbacks.
-- Implemented real-time IPC status event broadcasting (`trainer:status-changed`) for launch, stop, and unexpected crash/exit detection.
-- Verified automatic cleanup on window closure and application quit (`stopAll`).
-- Verified unit test suite `test/trainerManager.test.ts` and Gates 8, 9, 10 in `test/verificationGates.test.tsx`.
-
-### Phase 6 — Integration Verification
-- Verified complete Add Game -> Activate Trainer -> Stop Trainer happy path workflow.
-- Verified complete Missing Trainer and Missing Game recovery workflows.
-- Verified full search, filter, and theme switching behaviors.
-- Verified delete safety and data persistence across mock service restarts.
-- Confirmed zero compile, lint, or runtime exceptions across all 16 verification gates.
-
-### Phase 7 — Dedicated Polish Pass
-- Audited visual hierarchy, typography, contrast ratios, keyboard accessibility, and focus styling.
-- Confirmed zero unused variables, parameters, or dead imports across the codebase (`noUnusedLocals`, `noUnusedParameters`).
-- Confirmed strict adherence to MVP scope without out-of-scope creep.
-
-### Phase 8 — Final Gate
-- Executed the full automated test suite: 36 tests passing across 5 suites (`test/storageService.test.ts`, `test/gameManager.test.ts`, `test/trainerManager.test.ts`, `test/components/Library.test.tsx`, `test/verificationGates.test.tsx`).
-- Verified zero TypeScript compilation errors with `npm run typecheck` (`tsc --noEmit`).
-- Verified clean production build with `npm run build` producing `dist/index.html`, `dist/assets/index-*.js`, `dist-electron/main.js`, and `dist-electron/preload.js`.
-- Confirmed all MVP requirements in `PRD.md` and tasks in `TASKS.md` are 100% complete and verified.
+### Phase 9 — UI/UX Anti-Slop Overhaul (Frontend Skills Revision)
+- **Aesthetic Direction:** "Machined Precision Tactical Console" — a bespoke desktop instrument aesthetic blending deep obsidian surfaces (`#0a0d12`), brushed titanium accents, double-bezel hardware enclosures, precision monospace telemetry, and tactile button-in-button interactions.
+- **Key Tasks in Progress:**
+  1. Token system upgrade in `src/renderer/index.css` with double-bezel concentric radii, specular highlight insets, and calibrated status hues.
+  2. UI component primitives refactoring (`Button`, `Input`, `Modal`, `Badge`, `Toast`).
+  3. GameCard redesign with nested double-bezel frames, live telemetry indicators, and tactile contextual actions.
+  4. Header & Library toolbar overhaul with live status counters and keyboard shortcut badges.
+  5. Composed empty states and modal dialogs with hardware-grade precision styling.
+  6. Comprehensive cross-theme, responsive, and test verification.
 
 ## Known Issues / Blockers
 
-None. The application is fully verified and ready for production use.
+None. Functional backend and IPC boundaries are intact; undergoing full visual and UX transformation.
