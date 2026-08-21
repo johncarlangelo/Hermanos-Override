@@ -105,19 +105,19 @@ Do not mark parent tasks complete while child requirements remain unverified.
 
 # Phase 7 — Dedicated Polish Pass
 
-- [ ] Review visual hierarchy.
-- [ ] Review spacing consistency.
-- [ ] Review typography.
-- [ ] Review action clarity.
-- [ ] Review status clarity.
-- [ ] Review loading and error feedback.
-- [ ] Review accessibility basics.
-- [ ] Review keyboard/focus behavior where applicable.
-- [ ] Review light/dark consistency.
-- [ ] Review desktop resizing.
-- [ ] Remove unnecessary visual complexity.
-- [ ] Remove dead code and unused dependencies.
-- [ ] Confirm no out-of-scope features slipped into the MVP.
+- [x] Review visual hierarchy.
+- [x] Review spacing consistency.
+- [x] Review typography.
+- [x] Review action clarity.
+- [x] Review status clarity.
+- [x] Review loading and error feedback.
+- [x] Review accessibility basics.
+- [x] Review keyboard/focus behavior where applicable.
+- [x] Review light/dark consistency.
+- [x] Review desktop resizing.
+- [x] Remove unnecessary visual complexity.
+- [x] Remove dead code and unused dependencies.
+- [x] Confirm no out-of-scope features slipped into the MVP.
 
 # Phase 8 — Final Gate
 
