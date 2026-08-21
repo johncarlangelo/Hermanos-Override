@@ -82,3 +82,10 @@ Use Windows `taskkill /PID <pid> /T /F` for stopping trainer processes.
 
 Reason:
 Many PC game trainers spawn sub-processes or companion wrappers. Killing the entire process tree cleanly ensures no orphaned trainer hooks remain active.
+
+## Decision 013 — Modern Glassmorphism & Pure Dark Theme Direction
+
+Adopt a modern, frosted glassmorphism visual system locked strictly to Dark Mode.
+
+Reason:
+Requested by product owner to replace generic UI with a refined desktop glass aesthetic. The design incorporates deep OLED obsidian backdrops, translucent frosted surfaces with backdrop-filter blur (`backdrop-blur-xl`), layered translucent borders (`border-white/10`), inner specular highlights (`shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]`), and double-bezel glass containers while locking to a pure dark theme.

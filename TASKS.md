@@ -128,14 +128,14 @@ Do not mark parent tasks complete while child requirements remain unverified.
 - [x] Update `PROGRESS.md` with final verification results.
 - [x] Only then declare MVP complete.
 
-# Phase 9 — UI/UX Anti-Slop Overhaul (Frontend Skills Revision)
+# Phase 9 — UI/UX Anti-Slop Overhaul (Modern Glassmorphism — Dark Theme Only)
 
-- [ ] Establish "Machined Precision Tactical Console" design tokens in `index.css` (deep obsidian palette, specular highlights, double-bezel variables).
-- [ ] Upgrade UI primitives (`Button`, `Input`, `Modal`, `Badge`, `Toast`) with tactile micro-physics and double-bezel concentric curves.
-- [ ] Redesign application Header and Navigation with precision telemetry, live status pill counters, and search shortcut hints.
-- [ ] Redesign GameCard with double-bezel nested enclosure, typography hierarchy, telemetry badge, and button-in-button action layout.
-- [ ] Redesign empty library and empty search result states with composed tactical empty-state illustrations and crisp typography.
-- [ ] Redesign Add/Edit Game Modal and Delete Confirmation with hardware-spec form controls and clear disk safety indicators.
-- [ ] Verify light and dark mode aesthetic consistency across all views.
-- [ ] Verify responsive layout across compact, medium, and ultra-wide desktop viewports.
+- [ ] Establish Modern Frosted Glassmorphism design tokens in `index.css` (pure dark OLED baseline `#06080d`, frosted glass surfaces, backdrop-filter blur `backdrop-blur-xl`, `border-white/10` hairlines, and `shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]` highlights).
+- [ ] Lock application to a pure dark theme (removing light mode artifacts and ensuring all components conform to dark frosted aesthetics).
+- [ ] Upgrade UI primitives (`Button`, `Input`, `Modal`, `Badge`, `Toast`) with glassmorphism styling, translucent fills, tactile micro-physics, and double-bezel concentric curves.
+- [ ] Redesign application Header and Navigation as a floating frosted glass control bar with integrated search shortcut pills (`Ctrl+K`), live status counter pills, and refined window drag controls.
+- [ ] Redesign GameCard with modern double-bezel frosted glass trays, glowing OLED status indicators, precision monospace telemetry, and translucent button-in-button action layout.
+- [ ] Redesign empty library and empty search result states with ethereal glass illustration cards, glowing accents, and crisp typography.
+- [ ] Redesign Add/Edit Game Modal and Delete Confirmation as high-end frosted glass overlays with hardware-grade inputs and prominent disk safety indicators.
+- [ ] Verify responsive layout across compact, medium, and ultra-wide desktop viewports without blur performance penalties.
 - [ ] Run full verification test suite (`npm test`), TypeScript check (`npm run typecheck`), and production build (`npm run build`).
