@@ -52,20 +52,20 @@ Do not mark parent tasks complete while child requirements remain unverified.
 
 # Phase 3 — Product UI
 
-- [ ] Design and implement the main game library.
-- [ ] Implement game cards.
-- [ ] Implement contextual status presentation.
-- [ ] Implement search.
-- [ ] Implement empty state.
-- [ ] Implement Add Game flow.
-- [ ] Implement Edit Game flow.
-- [ ] Implement delete confirmation.
-- [ ] Implement loading states.
-- [ ] Implement recoverable error states.
-- [ ] Implement missing-file UI.
-- [ ] Implement light/dark theme behavior.
-- [ ] Verify desktop resizing and layout behavior.
-- [ ] Perform an independent UI/UX review.
+- [x] Design and implement the main game library.
+- [x] Implement game cards.
+- [x] Implement contextual status presentation.
+- [x] Implement search.
+- [x] Implement empty state.
+- [x] Implement Add Game flow.
+- [x] Implement Edit Game flow.
+- [x] Implement delete confirmation.
+- [x] Implement loading states.
+- [x] Implement recoverable error states.
+- [x] Implement missing-file UI.
+- [x] Implement light/dark theme behavior.
+- [x] Verify desktop resizing and layout behavior.
+- [x] Perform an independent UI/UX review.
 
 # Phase 4 — File Detection
 

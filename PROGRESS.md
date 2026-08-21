@@ -8,8 +8,8 @@ Update it whenever a meaningful task, phase, architectural decision, blocker, or
 
 ## Current State
 
-- Current phase: Phase 2 Complete -> Entering Phase 3 (Product UI)
-- Current task: Phase 2 Persistence verified, proceeding to Phase 3 Product UI
+- Current phase: Phase 3 Complete -> Entering Phase 4 (File Detection)
+- Current task: Phase 3 Product UI verified, proceeding to Phase 4 File Detection
 - Status: Active
 - Last updated: 2026-08-21
 
@@ -52,11 +52,20 @@ Discovered and inspected skills in workspace:
 - Verified that transient runtime status (e.g. `status`, `trainerPid`) is stripped before persisting to JSON.
 - Verified unit test suites `test/storageService.test.ts` (5 tests) and `test/gameManager.test.ts` (8 tests).
 
+### Phase 3 — Product UI
+- Implemented professional desktop game library UI with responsive grid, card layout, and contextual actions.
+- Implemented status badges with visual color coding and subtle activity indicators.
+- Implemented case-insensitive search with count indicators and clear search recovery.
+- Implemented Add Game and Edit Game dialogs with path validation and native file browser integrations.
+- Implemented delete confirmation modal with prominent disk safety guarantee.
+- Implemented robust loading and empty states across library and search.
+- Verified all UI interactions and component tests in `test/components/Library.test.tsx` and `test/verificationGates.test.tsx`.
+
 ## Current Work
 
-### Phase 3 — Product UI
-- Designing and verifying the full product UI suite: responsive GameGrid/cards, search, modal dialogs, contextual status presentation, empty state, theme switching, and accessibility.
+### Phase 4 — File Detection
+- Verifying dynamic filesystem status detection (missing_game, no_trainer, missing_trainer, ready, trainer_running) and relinking workflows.
 
 ## Known Issues / Blockers
 
-None. Persistence and foundation pass all automated tests and typechecks.
+None. UI and persistence pass all verification checks.
