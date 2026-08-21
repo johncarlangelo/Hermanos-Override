@@ -39,16 +39,16 @@ Do not mark parent tasks complete while child requirements remain unverified.
 
 # Phase 2 — Persistence
 
-- [ ] Define the game data model.
-- [ ] Implement stable IDs and timestamps.
-- [ ] Implement JSON persistence under the OS application-data directory.
-- [ ] Implement load-on-start.
-- [ ] Implement save/update behavior.
-- [ ] Implement game create operation.
-- [ ] Implement game update operation.
-- [ ] Implement game delete operation.
-- [ ] Verify application restart preserves game data.
-- [ ] Verify deleting an entry never deletes referenced files.
+- [x] Define the game data model.
+- [x] Implement stable IDs and timestamps.
+- [x] Implement JSON persistence under the OS application-data directory.
+- [x] Implement load-on-start.
+- [x] Implement save/update behavior.
+- [x] Implement game create operation.
+- [x] Implement game update operation.
+- [x] Implement game delete operation.
+- [x] Verify application restart preserves game data.
+- [x] Verify deleting an entry never deletes referenced files.
 
 # Phase 3 — Product UI
 

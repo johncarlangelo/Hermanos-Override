@@ -8,8 +8,8 @@ Update it whenever a meaningful task, phase, architectural decision, blocker, or
 
 ## Current State
 
-- Current phase: Phase 1 Complete -> Entering Phase 2 (Persistence)
-- Current task: Phase 1 Foundation verified, proceeding to Phase 2 Persistence
+- Current phase: Phase 2 Complete -> Entering Phase 3 (Product UI)
+- Current task: Phase 2 Persistence verified, proceeding to Phase 3 Product UI
 - Status: Active
 - Last updated: 2026-08-21
 
@@ -44,11 +44,19 @@ Discovered and inspected skills in workspace:
 - Verified initial empty library view with primary Add Game call to action.
 - Executed and verified build, typecheck, and test suite across 5 test suites (36 tests passing).
 
+### Phase 2 — Persistence
+- Defined and implemented core game model with stable randomUUID identifiers and ISO timestamp tracking.
+- Implemented atomic file write persistence under `%APPDATA%/Hermanos Override/data/games.json` and `settings.json`.
+- Implemented load-on-start and CRUD operations (createGame, updateGame, deleteGame) in GameManager.
+- Verified strict delete safety: deleting a library record never deletes or modifies files on disk.
+- Verified that transient runtime status (e.g. `status`, `trainerPid`) is stripped before persisting to JSON.
+- Verified unit test suites `test/storageService.test.ts` (5 tests) and `test/gameManager.test.ts` (8 tests).
+
 ## Current Work
 
-### Phase 2 — Persistence
-- Executing Phase 2 tasks: game data model validation, stable IDs and ISO timestamps, atomic JSON persistence in `%APPDATA%/Hermanos Override/data/`, load-on-start, create, update, delete operations, and delete safety verification.
+### Phase 3 — Product UI
+- Designing and verifying the full product UI suite: responsive GameGrid/cards, search, modal dialogs, contextual status presentation, empty state, theme switching, and accessibility.
 
 ## Known Issues / Blockers
 
-None. Foundation verified and build passes.
+None. Persistence and foundation pass all automated tests and typechecks.
