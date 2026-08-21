@@ -121,9 +121,9 @@ Do not mark parent tasks complete while child requirements remain unverified.
 
 # Phase 8 — Final Gate
 
-- [ ] Run the complete verification suite from `VERIFY.md`.
-- [ ] Run production build.
-- [ ] Confirm all MVP tasks are `[x]`.
-- [ ] Confirm no `[!]` blockers remain.
-- [ ] Update `PROGRESS.md` with final verification results.
-- [ ] Only then declare MVP complete.
+- [x] Run the complete verification suite from `VERIFY.md`.
+- [x] Run production build.
+- [x] Confirm all MVP tasks are `[x]`.
+- [x] Confirm no `[!]` blockers remain.
+- [x] Update `PROGRESS.md` with final verification results.
+- [x] Only then declare MVP complete.
