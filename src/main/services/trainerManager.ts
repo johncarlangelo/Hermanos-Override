@@ -59,6 +59,14 @@ export class TrainerManager {
     return this.runningTrainers.get(gameId)?.pid;
   }
 
+  public getRunningCount(): number {
+    let count = 0;
+    for (const [gameId] of this.runningTrainers) {
+      if (this.isTrainerRunning(gameId)) count++;
+    }
+    return count;
+  }
+
   public async launchTrainer(
     gameId: string,
     trainerExePath: string
@@ -227,9 +235,10 @@ export class TrainerManager {
     }
   }
 
-  public stopAll(): void {
-    for (const [gameId] of this.runningTrainers) {
-      this.stopTrainer(gameId).catch(() => {});
-    }
+  public async stopAll(): Promise<void> {
+    const gameIds = [...this.runningTrainers.keys()];
+    await Promise.all(
+      gameIds.map((gameId) => this.stopTrainer(gameId).catch(() => {}))
+    );
   }
 }

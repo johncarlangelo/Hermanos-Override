@@ -15,12 +15,18 @@ declare module 'electron' {
     reply(channel: string, ...args: any[]): void;
   }
 
+  export interface NativeImage {
+    toPNG(): Buffer;
+    isEmpty(): boolean;
+  }
+
   export namespace app {
     export function whenReady(): Promise<void>;
     export function quit(): void;
     export function getPath(name: string): string;
     export function on(event: string, listener: (...args: any[]) => void): void;
     export function requestSingleInstanceLock(): boolean;
+    export function getFileIcon(filePath: string, options?: { size?: 'small' | 'normal' | 'large' }): Promise<NativeImage>;
     export const isPackaged: boolean;
   }
 
@@ -73,6 +79,12 @@ declare module 'electron' {
     }
     export function showOpenDialog(options: OpenDialogOptions): Promise<OpenDialogReturnValue>;
     export function showOpenDialog(browserWindow: BrowserWindow, options: OpenDialogOptions): Promise<OpenDialogReturnValue>;
+    export interface MessageBoxReturnValue {
+      response: number;
+      checkboxChecked: boolean;
+    }
+    export function showMessageBox(options: any): Promise<MessageBoxReturnValue>;
+    export function showMessageBox(browserWindow: BrowserWindow, options: any): Promise<MessageBoxReturnValue>;
   }
 
   export namespace ipcMain {

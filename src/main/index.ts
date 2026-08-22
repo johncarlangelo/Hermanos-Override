@@ -1,4 +1,4 @@
-import { app, BrowserWindow, protocol, net } from 'electron';
+import { app, BrowserWindow, dialog, protocol, net } from 'electron';
 import fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
@@ -36,6 +36,8 @@ const trainerManager = new TrainerManager();
 const gameManager = new GameManager(storageService, trainerManager);
 
 function createWindow(): void {
+  let forceClose = false;
+
   mainWindow = new BrowserWindow({
     width: 1180,
     height: 780,
@@ -64,6 +66,39 @@ function createWindow(): void {
   mainWindow.webContents.on('will-navigate', (event, url) => {
     if (mainWindow && url !== mainWindow.webContents.getURL()) {
       event.preventDefault();
+    }
+  });
+
+  // Guard: warn before closing while trainer processes are still active,
+  // since closing the app terminates them.
+  mainWindow.on('close', async (event) => {
+    if (forceClose) return;
+    const win = mainWindow;
+    if (!win || win.isDestroyed()) return;
+
+    const runningCount = trainerManager.getRunningCount();
+    if (runningCount === 0) return;
+
+    event.preventDefault();
+    const { response } = await dialog.showMessageBox(win, {
+      type: 'warning',
+      buttons: ['Stop trainers & exit', 'Cancel'],
+      defaultId: 0,
+      cancelId: 1,
+      title: 'Trainers still running',
+      message:
+        runningCount === 1
+          ? '1 trainer is still running.'
+          : `${runningCount} trainers are still running.`,
+      detail: 'Closing Hermanos Override will stop all active trainer processes.'
+    });
+
+    if (response === 0) {
+      forceClose = true;
+      await trainerManager.stopAll();
+      if (!win.isDestroyed()) {
+        win.close();
+      }
     }
   });
 
