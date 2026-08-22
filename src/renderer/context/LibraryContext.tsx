@@ -81,6 +81,23 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     refreshGames();
   }, [refreshGames]);
 
+  // Re-evaluate dynamic status when the window regains focus. Files may have
+  // been moved, renamed or deleted while the app was in the background.
+  useEffect(() => {
+    const handleFocus = () => {
+      refreshGames();
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') handleFocus();
+    };
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [refreshGames]);
+
   // Listen for trainer status change events from the main process
   useEffect(() => {
     if (!window.electronAPI?.onTrainerStatusChange) return;
@@ -242,11 +259,15 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   };
 
-  // Filtered games based on search query (case-insensitive)
+  // Filtered games based on search query (case-insensitive), alphabetically sorted
   const filteredGames = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
-    if (!query) return games;
-    return games.filter((g) => g.name.toLowerCase().includes(query));
+    const matches = query
+      ? games.filter((g) => g.name.toLowerCase().includes(query))
+      : games;
+    return [...matches].sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+    );
   }, [games, searchQuery]);
 
   return (

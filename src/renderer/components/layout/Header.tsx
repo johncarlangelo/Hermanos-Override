@@ -17,12 +17,15 @@ export const Header: React.FC = () => {
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Global Ctrl+K / Cmd+K search shortcut listener
+  // Global keyboard shortcuts: Ctrl+K/Cmd+K focus search, Ctrl+N/Cmd+N add game
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         searchInputRef.current?.focus();
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n') {
+        e.preventDefault();
+        setIsAddModalOpen(true);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
