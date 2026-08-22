@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+﻿import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
@@ -51,9 +51,9 @@ describe('Comprehensive Gate Verifications (Gate 1 to Gate 16)', () => {
       const mockApi: Partial<ElectronAPI> = {
         listGames: vi.fn().mockResolvedValue([]),
         onTrainerStatusChange: vi.fn().mockReturnValue(() => {}),
-        getSettings: vi.fn().mockResolvedValue({ theme: 'dark' }),
-        updateSettings: vi.fn().mockResolvedValue({ theme: 'dark' }),
-        setTitleBarTheme: vi.fn()
+        minimizeWindow: vi.fn(),
+        maximizeWindow: vi.fn(),
+        closeWindow: vi.fn()
       };
       window.electronAPI = mockApi as ElectronAPI;
 
@@ -404,9 +404,9 @@ describe('Comprehensive Gate Verifications (Gate 1 to Gate 16)', () => {
       const mockApi: Partial<ElectronAPI> = {
         listGames: vi.fn().mockResolvedValue(mockGames),
         onTrainerStatusChange: vi.fn().mockReturnValue(() => {}),
-        getSettings: vi.fn().mockResolvedValue({ theme: 'dark' }),
-        updateSettings: vi.fn().mockResolvedValue({ theme: 'dark' }),
-        setTitleBarTheme: vi.fn()
+        minimizeWindow: vi.fn(),
+        maximizeWindow: vi.fn(),
+        closeWindow: vi.fn()
       };
       window.electronAPI = mockApi as ElectronAPI;
 
@@ -443,36 +443,28 @@ describe('Comprehensive Gate Verifications (Gate 1 to Gate 16)', () => {
     });
   });
 
-  // Gate 15: UI / UX Accessibility & Themes
-  describe('Gate 15: UI / UX Accessibility & Themes', () => {
-    it('supports theme switching between dark, light, and system and persists settings', async () => {
-      let savedSettings = { theme: 'dark' as const };
-      const updateSettingsMock = vi.fn().mockImplementation((s) => {
-        savedSettings = { ...savedSettings, ...s };
-        return Promise.resolve(savedSettings);
-      });
-
+  // Gate 15: UI / UX Accessibility & Dark-Only Theme
+  describe('Gate 15: UI / UX Dark-Only Theme', () => {
+    it('renders without any theme-switching controls (dark mode is locked)', async () => {
       const mockApi: Partial<ElectronAPI> = {
         listGames: vi.fn().mockResolvedValue([]),
         onTrainerStatusChange: vi.fn().mockReturnValue(() => {}),
-        getSettings: vi.fn().mockImplementation(() => Promise.resolve(savedSettings)),
-        updateSettings: updateSettingsMock,
-        setTitleBarTheme: vi.fn()
+        minimizeWindow: vi.fn(),
+        maximizeWindow: vi.fn(),
+        closeWindow: vi.fn()
       };
       window.electronAPI = mockApi as ElectronAPI;
 
       render(<App />);
 
       await waitFor(() => {
-        expect(screen.getByLabelText(/Current theme/i)).toBeInTheDocument();
+        expect(screen.getAllByText('Hermanos Override').length).toBeGreaterThan(0);
       });
 
-      const themeToggleBtn = screen.getByLabelText(/Current theme/i);
-      fireEvent.click(themeToggleBtn);
-
-      await waitFor(() => {
-        expect(updateSettingsMock).toHaveBeenCalled();
-      });
+      // The legacy light/dark/system toggle must be gone
+      expect(screen.queryByLabelText(/Current theme/i)).not.toBeInTheDocument();
+      expect(screen.queryByLabelText(/theme/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/light mode|light theme/i)).not.toBeInTheDocument();
     });
   });
 

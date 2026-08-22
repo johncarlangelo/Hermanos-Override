@@ -4,7 +4,6 @@ import type {
   CreateGameInput,
   UpdateGameInput,
   SelectFileOptions,
-  AppSettings,
   TrainerStatusChangeEvent
 } from '../shared/types';
 
@@ -40,15 +39,9 @@ const api: ElectronAPI = {
   exportLibrary: () => ipcRenderer.invoke(IPC_CHANNELS.LIBRARY_EXPORT),
   importLibrary: () => ipcRenderer.invoke(IPC_CHANNELS.LIBRARY_IMPORT),
 
-  getSettings: () => ipcRenderer.invoke(IPC_CHANNELS.SETTINGS_GET),
-  updateSettings: (settings: Partial<AppSettings>) =>
-    ipcRenderer.invoke(IPC_CHANNELS.SETTINGS_UPDATE, settings),
-
   minimizeWindow: () => ipcRenderer.send(IPC_CHANNELS.WINDOW_MINIMIZE),
   maximizeWindow: () => ipcRenderer.send(IPC_CHANNELS.WINDOW_MAXIMIZE),
-  closeWindow: () => ipcRenderer.send(IPC_CHANNELS.WINDOW_CLOSE),
-  setTitleBarTheme: (theme: 'dark' | 'light') =>
-    ipcRenderer.send(IPC_CHANNELS.WINDOW_SET_TITLEBAR_THEME, theme)
+  closeWindow: () => ipcRenderer.send(IPC_CHANNELS.WINDOW_CLOSE)
 };
 
 contextBridge.exposeInMainWorld('electronAPI', api);

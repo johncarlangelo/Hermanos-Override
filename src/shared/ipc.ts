@@ -5,7 +5,6 @@ import type {
   TrainerLaunchResult,
   TrainerStopResult,
   SelectFileOptions,
-  AppSettings,
   TrainerStatusChangeEvent,
   GameStatusInfo,
   LibraryIOResult
@@ -32,15 +31,10 @@ export const IPC_CHANNELS = {
   // Dialogs
   DIALOG_SELECT_FILE: 'dialog:select-file',
 
-  // Settings
-  SETTINGS_GET: 'settings:get',
-  SETTINGS_UPDATE: 'settings:update',
-
   // Window operations
   WINDOW_MINIMIZE: 'window:minimize',
   WINDOW_MAXIMIZE: 'window:maximize',
   WINDOW_CLOSE: 'window:close',
-  WINDOW_SET_TITLEBAR_THEME: 'window:set-titlebar-theme',
 } as const;
 
 export interface ElectronAPI {
@@ -66,15 +60,10 @@ export interface ElectronAPI {
   exportLibrary: () => Promise<LibraryIOResult>;
   importLibrary: () => Promise<LibraryIOResult>;
 
-  // Settings
-  getSettings: () => Promise<AppSettings>;
-  updateSettings: (settings: Partial<AppSettings>) => Promise<AppSettings>;
-
   // Window Controls
   minimizeWindow: () => void;
   maximizeWindow: () => void;
   closeWindow: () => void;
-  setTitleBarTheme: (theme: 'dark' | 'light') => void;
 }
 
 declare global {

@@ -64,12 +64,9 @@ describe('Library UI Integration', () => {
       selectFile: vi.fn().mockImplementation(() => Promise.resolve('C:\\Games\\Selected.exe')),
       exportLibrary: vi.fn().mockImplementation(() => Promise.resolve({ success: true, count: mockGames.length })),
       importLibrary: vi.fn().mockImplementation(() => Promise.resolve({ success: true, count: mockGames.length })),
-      getSettings: vi.fn().mockImplementation(() => Promise.resolve({ theme: 'dark' })),
-      updateSettings: vi.fn().mockImplementation((s) => Promise.resolve(s)),
       minimizeWindow: vi.fn(),
       maximizeWindow: vi.fn(),
-      closeWindow: vi.fn(),
-      setTitleBarTheme: vi.fn()
+      closeWindow: vi.fn()
     };
 
     window.electronAPI = mockElectronAPI;

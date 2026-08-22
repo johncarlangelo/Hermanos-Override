@@ -5,7 +5,6 @@ import type {
   CreateGameInput,
   UpdateGameInput,
   SelectFileOptions,
-  AppSettings,
   LibraryIOResult
 } from '../../shared/types';
 import { GameManager } from '../services/gameManager';
@@ -178,25 +177,6 @@ export function registerIpcHandlers(
     }
   });
 
-  // Settings
-  ipcMain.handle(IPC_CHANNELS.SETTINGS_GET, async () => {
-    return storageService.loadSettings();
-  });
-
-  ipcMain.handle(
-    IPC_CHANNELS.SETTINGS_UPDATE,
-    async (_event, newSettings: Partial<AppSettings>) => {
-      if (!isPlainObject(newSettings)) throw new Error('Invalid settings payload');
-      const current = await storageService.loadSettings();
-      const updated: AppSettings = {
-        ...current,
-        ...newSettings
-      };
-      await storageService.saveSettings(updated);
-      return updated;
-    }
-  );
-
   // Window Controls
   ipcMain.on(IPC_CHANNELS.WINDOW_MINIMIZE, () => {
     const win = getMainWindow();
@@ -222,30 +202,4 @@ export function registerIpcHandlers(
       win.close();
     }
   });
-
-  ipcMain.on(
-    IPC_CHANNELS.WINDOW_SET_TITLEBAR_THEME,
-    (_event, theme: 'dark' | 'light') => {
-      const win = getMainWindow();
-      if (win && !win.isDestroyed() && process.platform === 'win32') {
-        try {
-          if (theme === 'dark') {
-            win.setTitleBarOverlay({
-              color: '#090d16',
-              symbolColor: '#94a3b8',
-              height: 36
-            });
-          } else {
-            win.setTitleBarOverlay({
-              color: '#ffffff',
-              symbolColor: '#475569',
-              height: 36
-            });
-          }
-        } catch {
-          // ignore if not supported
-        }
-      }
-    }
-  );
 }

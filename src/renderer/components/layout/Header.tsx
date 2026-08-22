@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLibrary } from '../../context/LibraryContext';
-import { ThemeToggle } from './ThemeToggle';
 import { Button } from '../ui/Button';
 import {
   Plus,
@@ -166,9 +165,6 @@ export const Header: React.FC = () => {
           >
             <Upload className={`w-4 h-4 ${isImporting ? 'animate-pulse text-sky-400' : ''}`} />
           </button>
-
-          {/* Theme Mode Indicator/Toggle */}
-          <ThemeToggle />
 
           {/* Primary Add Game CTA */}
           <Button
