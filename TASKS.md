@@ -170,3 +170,13 @@ Do not mark parent tasks complete while child requirements remain unverified.
 - [x] Remove per-card backdrop-filter GPU cost without visual regression.
 - [x] Configure electron-builder packaging (NSIS installer + portable executable).
 - [x] Verify packaged application launches successfully.
+
+# Phase 13 — Workflow Features & Interaction Quality
+
+- [x] Add library backup export to a user-chosen JSON file.
+- [x] Add library import with record sanitization and library replacement.
+- [x] Stack toast notifications in a queue with per-toast auto-dismiss.
+- [x] Add status filter chips (All / Ready / Running / Missing) above the game grid.
+- [x] Trap Tab focus inside modals and restore focus on close.
+- [x] Detect Windows PID reuse for tracked trainer processes via image-name verification.
+- [x] Verify with typecheck, full test suite and production build.

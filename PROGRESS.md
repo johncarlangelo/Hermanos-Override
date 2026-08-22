@@ -71,3 +71,12 @@ pm run dist.
 pm run typecheck (0 errors), 
 pm test (39/39), 
 pm run dist (clean packaging), and a launch test of elease/win-unpacked/Hermanos Override.exe (process started and stayed alive).
+
+### Phase 13 — Workflow Features & Interaction Quality
+- **Library export/import:** Header toolbar gained Export/Import actions. Export writes the current sanitized library to a user-chosen .json via a native save dialog; import validates and sanitizes records (malformed entries dropped), replaces the library, and refreshes statuses. Fully offline/local.
+- **Toast queue:** Notifications are now a stacked queue (max 5 visible) with per-toast auto-dismiss timers, slide-out dismissal animation, and ria-live announcements, instead of a single slot where rapid messages overwrote each other.
+- **Status filters:** Filter chips (All / Ready / Running / Missing) with live counts render above the game grid and compose with search; empty-state copy now distinguishes search misses from filter misses and offers "Clear Filters".
+- **Modal accessibility:** Dialogs now trap Tab/Shift+Tab within the dialog, move initial focus to the first form field, and restore focus to the triggering element on close.
+- **PID-reuse guard:** Tracked trainer PIDs are periodically re-verified against the process image name via 	asklist; if Windows recycled the PID after a crash, status correctly falls back from "running" with an unexpected-exit notification.
+- **Verification:** 
+pm run typecheck clean, 39/39 tests passing, production build clean.
