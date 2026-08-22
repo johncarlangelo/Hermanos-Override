@@ -16,11 +16,42 @@ interface RunningTrainerInfo {
   pid: number;
   trainerPath: string;
   isStoppingManually: boolean;
+  /** Timestamp of the last successful deep identity verification (ms epoch). */
+  lastVerifiedAt?: number;
 }
+
+const VERIFY_CACHE_MS = 5000;
 
 export class TrainerManager {
   private runningTrainers = new Map<string, RunningTrainerInfo>();
   private statusListeners: Array<(event: TrainerStatusChangeEvent) => void> = [];
+
+  /**
+   * Guard against PID reuse: after a trainer crashes, Windows can recycle
+   * its PID for an unrelated process, making `process.kill(pid, 0)` succeed
+   * and falsely report "running". On Windows we verify the process image
+   * name still matches the trainer executable.
+   */
+  private async pidBelongsToTrainer(info: RunningTrainerInfo): Promise<boolean> {
+    if (process.platform !== 'win32') return true;
+
+    try {
+      const { stdout } = await execAsync(
+        `tasklist /FI "PID eq ${info.pid}" /FO CSV /NH`,
+        { windowsHide: true }
+      );
+      const line = stdout.split(/\r?\n/).find((l) => l.trim().startsWith('"'));
+      if (!line) return false;
+
+      const imageName = line.split('","')[0].replace(/^"/, '').toLowerCase();
+      const expected = path.basename(info.trainerPath).toLowerCase();
+      return imageName === expected;
+    } catch {
+      // tasklist failure: fall back to treating the PID as valid rather than
+      // killing a possibly-valid session on a transient command error.
+      return true;
+    }
+  }
 
   public onStatusChange(listener: (event: TrainerStatusChangeEvent) => void): () => void {
     this.statusListeners.push(listener);
@@ -43,16 +74,35 @@ export class TrainerManager {
     const info = this.runningTrainers.get(gameId);
     if (!info) return false;
 
-    // Check if the process is alive
+    // Cheap liveness check
     try {
-      // process.kill with signal 0 checks existence without killing
       process.kill(info.pid, 0);
-      return true;
     } catch {
-      // Process no longer exists
       this.runningTrainers.delete(gameId);
       return false;
     }
+
+    // Periodic identity re-verification (throttled) to detect PID reuse.
+    if (Date.now() - (info.lastVerifiedAt ?? 0) > VERIFY_CACHE_MS) {
+      info.lastVerifiedAt = Date.now();
+      this.pidBelongsToTrainer(info)
+        .then((valid) => {
+          if (valid) return;
+          if (this.runningTrainers.get(gameId) === info) {
+            this.runningTrainers.delete(gameId);
+            this.notifyListeners({
+              gameId,
+              status: 'ready',
+              trainerRunning: false,
+              unexpectedExit: true,
+              error: 'Trainer process ended unexpectedly.'
+            });
+          }
+        })
+        .catch(() => {});
+    }
+
+    return true;
   }
 
   public getTrainerPid(gameId: string): number | undefined {
@@ -116,7 +166,8 @@ export class TrainerManager {
         process: child,
         pid,
         trainerPath: trainerExePath,
-        isStoppingManually: false
+        isStoppingManually: false,
+        lastVerifiedAt: Date.now()
       };
 
       this.runningTrainers.set(gameId, runningInfo);
