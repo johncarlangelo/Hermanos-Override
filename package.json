@@ -10,7 +10,36 @@
     "build:renderer": "vite build",
     "build": "node scripts/build-main.mjs && vite build",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "dist": "npm run build && electron-builder --win"
+  },
+  "build": {
+    "appId": "com.hermanos.override",
+    "productName": "Hermanos Override",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}.${ext}"
+    }
   },
   "repository": {
     "type": "git",
@@ -44,6 +73,7 @@
     "autoprefixer": "^10.5.4",
     "cross-env": "^10.1.0",
     "electron": "^43.4.1",
+    "electron-builder": "^26.15.3",
     "esbuild": "^0.28.2",
     "jsdom": "^29.1.1",
     "postcss": "^8.5.26",
