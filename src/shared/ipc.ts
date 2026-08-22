@@ -7,7 +7,8 @@ import type {
   SelectFileOptions,
   AppSettings,
   TrainerStatusChangeEvent,
-  GameStatusInfo
+  GameStatusInfo,
+  LibraryIOResult
 } from './types';
 
 export const IPC_CHANNELS = {
@@ -23,6 +24,10 @@ export const IPC_CHANNELS = {
   TRAINER_LAUNCH: 'trainer:launch',
   TRAINER_STOP: 'trainer:stop',
   TRAINER_STATUS_CHANGED: 'trainer:status-changed',
+
+  // Library import / export
+  LIBRARY_EXPORT: 'library:export',
+  LIBRARY_IMPORT: 'library:import',
 
   // Dialogs
   DIALOG_SELECT_FILE: 'dialog:select-file',
@@ -56,6 +61,10 @@ export interface ElectronAPI {
 
   // Native Dialogs
   selectFile: (options: SelectFileOptions) => Promise<string | null>;
+
+  // Library import / export
+  exportLibrary: () => Promise<LibraryIOResult>;
+  importLibrary: () => Promise<LibraryIOResult>;
 
   // Settings
   getSettings: () => Promise<AppSettings>;

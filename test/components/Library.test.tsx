@@ -62,6 +62,8 @@ describe('Library UI Integration', () => {
       stopTrainer: vi.fn().mockImplementation(() => Promise.resolve({ success: true })),
       onTrainerStatusChange: vi.fn().mockImplementation(() => () => {}),
       selectFile: vi.fn().mockImplementation(() => Promise.resolve('C:\\Games\\Selected.exe')),
+      exportLibrary: vi.fn().mockImplementation(() => Promise.resolve({ success: true, count: mockGames.length })),
+      importLibrary: vi.fn().mockImplementation(() => Promise.resolve({ success: true, count: mockGames.length })),
       getSettings: vi.fn().mockImplementation(() => Promise.resolve({ theme: 'dark' })),
       updateSettings: vi.fn().mockImplementation((s) => Promise.resolve(s)),
       minimizeWindow: vi.fn(),

@@ -1,10 +1,12 @@
-import { ipcMain, BrowserWindow } from 'electron';
+import { ipcMain, BrowserWindow, dialog } from 'electron';
+import fs from 'fs';
 import { IPC_CHANNELS } from '../../shared/ipc';
 import type {
   CreateGameInput,
   UpdateGameInput,
   SelectFileOptions,
-  AppSettings
+  AppSettings,
+  LibraryIOResult
 } from '../../shared/types';
 import { GameManager } from '../services/gameManager';
 import { TrainerManager } from '../services/trainerManager';
@@ -125,6 +127,56 @@ export function registerIpcHandlers(
       return DialogService.selectFile(win, options);
     }
   );
+
+  // Library export: save a validated copy of games.json to a user-chosen path
+  ipcMain.handle(IPC_CHANNELS.LIBRARY_EXPORT, async (): Promise<LibraryIOResult> => {
+    try {
+      const win = getMainWindow();
+      const games = await storageService.loadGames();
+      const { canceled, filePath } = await dialog.showSaveDialog(win!, {
+        title: 'Export Game Library',
+        defaultPath: 'hermanos-library.json',
+        filters: [{ name: 'JSON Library', extensions: ['json'] }]
+      });
+      if (canceled || !filePath) {
+        return { success: false, canceled: true };
+      }
+      await fs.promises.writeFile(filePath, JSON.stringify(games, null, 2), 'utf-8');
+      return { success: true, count: games.length, path: filePath };
+    } catch (err: any) {
+      console.error('Library export failed:', err);
+      return { success: false, error: err?.message || 'Failed to export library' };
+    }
+  });
+
+  // Library import: replace the library with records from a validated JSON file.
+  // Records are sanitized; malformed entries are dropped, never executed.
+  ipcMain.handle(IPC_CHANNELS.LIBRARY_IMPORT, async (): Promise<LibraryIOResult> => {
+    try {
+      const win = getMainWindow();
+      const { canceled, filePaths } = await dialog.showOpenDialog(win!, {
+        title: 'Import Game Library',
+        filters: [{ name: 'JSON Library', extensions: ['json'] }],
+        properties: ['openFile']
+      });
+      if (canceled || filePaths.length === 0) {
+        return { success: false, canceled: true };
+      }
+      const raw = await fs.promises.readFile(filePaths[0], 'utf-8');
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(raw);
+      } catch {
+        return { success: false, error: 'The selected file is not valid JSON.' };
+      }
+      const sanitized = storageService.sanitizeGames(parsed);
+      await storageService.saveGames(sanitized);
+      return { success: true, count: sanitized.length };
+    } catch (err: any) {
+      console.error('Library import failed:', err);
+      return { success: false, error: err?.message || 'Failed to import library' };
+    }
+  });
 
   // Settings
   ipcMain.handle(IPC_CHANNELS.SETTINGS_GET, async () => {

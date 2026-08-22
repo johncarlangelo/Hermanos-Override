@@ -76,3 +76,20 @@ export interface TrainerStatusChangeEvent {
   unexpectedExit?: boolean;
   error?: string;
 }
+
+/** A transient UI notification (toast). Never persisted. */
+export interface AppNotification {
+  id: number;
+  type: 'success' | 'error' | 'info' | 'warning';
+  message: string;
+}
+
+export type StatusFilter = 'all' | 'ready' | 'running' | 'missing';
+
+export interface LibraryIOResult {
+  success: boolean;
+  count?: number;
+  path?: string;
+  canceled?: boolean;
+  error?: string;
+}

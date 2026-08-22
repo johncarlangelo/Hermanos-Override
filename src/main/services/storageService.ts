@@ -69,8 +69,7 @@ export class StorageService {
     }
   }
 
-  private sanitizeGameRecord(item: any): Game | null {
-    if (!item || typeof item !== 'object') return null;
+  private sanitizeGameRecord(item: any): Game | null {    if (!item || typeof item !== 'object') return null;
     if (typeof item.id !== 'string' || !item.id.trim()) return null;
     if (typeof item.name !== 'string' || !item.name.trim()) return null;
     if (typeof item.gameExePath !== 'string' || !item.gameExePath.trim()) return null;
@@ -94,6 +93,20 @@ export class StorageService {
     } catch (backupErr) {
       console.error('Failed to back up corrupt data file:', backupErr);
     }
+  }
+
+  /**
+   * Validates an untrusted array (e.g. from an imported JSON file) and
+   * returns only well-formed game records.
+   */
+  public sanitizeGames(raw: unknown): Game[] {
+    if (!Array.isArray(raw)) return [];
+    const games: Game[] = [];
+    for (const item of raw) {
+      const sanitized = this.sanitizeGameRecord(item);
+      if (sanitized) games.push(sanitized);
+    }
+    return games;
   }
 
   public async loadGames(): Promise<Game[]> {

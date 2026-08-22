@@ -79,6 +79,20 @@ declare module 'electron' {
     }
     export function showOpenDialog(options: OpenDialogOptions): Promise<OpenDialogReturnValue>;
     export function showOpenDialog(browserWindow: BrowserWindow, options: OpenDialogOptions): Promise<OpenDialogReturnValue>;
+    export interface SaveDialogOptions {
+      title?: string;
+      defaultPath?: string;
+      buttonLabel?: string;
+      filters?: Array<{ name: string; extensions: string[] }>;
+      properties?: Array<'showOverwriteConfirmation' | 'showHiddenFiles' | 'createDirectory' | 'treatPackageAsDirectory' | 'dontAddToRecent'>;
+      message?: string;
+    }
+    export interface SaveDialogReturnValue {
+      canceled: boolean;
+      filePath?: string;
+    }
+    export function showSaveDialog(options: SaveDialogOptions): Promise<SaveDialogReturnValue>;
+    export function showSaveDialog(browserWindow: BrowserWindow, options: SaveDialogOptions): Promise<SaveDialogReturnValue>;
     export interface MessageBoxReturnValue {
       response: number;
       checkboxChecked: boolean;

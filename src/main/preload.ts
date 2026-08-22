@@ -37,6 +37,9 @@ const api: ElectronAPI = {
   selectFile: (options: SelectFileOptions) =>
     ipcRenderer.invoke(IPC_CHANNELS.DIALOG_SELECT_FILE, options),
 
+  exportLibrary: () => ipcRenderer.invoke(IPC_CHANNELS.LIBRARY_EXPORT),
+  importLibrary: () => ipcRenderer.invoke(IPC_CHANNELS.LIBRARY_IMPORT),
+
   getSettings: () => ipcRenderer.invoke(IPC_CHANNELS.SETTINGS_GET),
   updateSettings: (settings: Partial<AppSettings>) =>
     ipcRenderer.invoke(IPC_CHANNELS.SETTINGS_UPDATE, settings),
