@@ -80,3 +80,11 @@ pm run dist (clean packaging), and a launch test of elease/win-unpacked/Hermano
 - **PID-reuse guard:** Tracked trainer PIDs are periodically re-verified against the process image name via 	asklist; if Windows recycled the PID after a crash, status correctly falls back from "running" with an unexpected-exit notification.
 - **Verification:** 
 pm run typecheck clean, 39/39 tests passing, production build clean.
+
+### Phase 14 — Performance Pass, Resilience & Desktop Polish
+- **Root-cause lag fix:** The three ambient light orbs were large CSS-filtered (lur-[100px+]) surfaces animating continuously *behind* every frosted-glass panel, forcing constant backdrop-filter re-sampling and per-frame Gaussian re-rasterization. Replaced with a static pre-blurred radial-gradient mesh (.glass-mesh-background) — visually equivalent color wash in the same positions, zero ongoing GPU cost. Framer Motion orb code and related state removed.
+- **Idle GPU saver:** ody[data-app-hidden='true'] pauses every looping CSS animation (pings, pulses) via nimation-play-state whenever the window loses focus or visibility — the common in-game scenario. Empty-state glow converted from an animated blurred layer to a filter-free gradient.
+- **Error boundary:** New top-level ErrorBoundary renders a frosted recovery screen with the error message and a Reload action instead of an unresponsive white window; library data on disk is never affected by renderer crashes.
+- **Window persistence:** Window size, position and maximized state are saved to window-state.json (debounced during move/resize, synchronously on close) and restored on launch, validated and clamped to the nearest attached display's work area so the window can never be restored off-screen after a monitor change.
+- **Verification:** 
+pm run typecheck clean, 39/39 tests passing, production build clean. A brief dev launch smoke test confirmed Electron starts without runtime errors (processes cleaned up afterwards).

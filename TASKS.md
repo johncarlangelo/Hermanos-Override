@@ -180,3 +180,12 @@ Do not mark parent tasks complete while child requirements remain unverified.
 - [x] Trap Tab focus inside modals and restore focus on close.
 - [x] Detect Windows PID reuse for tracked trainer processes via image-name verification.
 - [x] Verify with typecheck, full test suite and production build.
+
+# Phase 14 — Performance Pass, Resilience & Desktop Polish
+
+- [x] Replace animated ambient blur orbs with a static pre-blurred gradient mesh (eliminates per-frame Gaussian blur rasterization under all glass panels).
+- [x] Pause all looping CSS animations while the window is hidden or unfocused.
+- [x] Replace the empty-state blurred pulse glow with a filter-free gradient.
+- [x] Add a renderer error boundary with a recoverable crash screen.
+- [x] Persist window size, position and maximized state across restarts, clamped to attached displays.
+- [x] Verify with typecheck, full test suite and production build.
