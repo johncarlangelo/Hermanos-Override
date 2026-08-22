@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import React, { useEffect } from 'react';
 import { Header } from './Header';
 import { GameGrid } from '../library/GameGrid';
 import { GameModal } from '../forms/GameModal';
@@ -20,15 +19,13 @@ export const Shell: React.FC = () => {
     dismissNotification
   } = useLibrary();
 
-  const prefersReducedMotion = useReducedMotion();
-  const [isAppVisible, setIsAppVisible] = useState(true);
-
-  // Perf: the ambient light orbs are large blurred surfaces that repaint
-  // continuously. Pause them whenever the window loses focus (e.g. while the
-  // user is in-game) and for users who prefer reduced motion.
+  // Perf: while the window is hidden or unfocused (e.g. the user is
+  // in-game), flag the body so CSS pauses all looping animations.
   useEffect(() => {
     const updateVisibility = () => {
-      setIsAppVisible(document.visibilityState === 'visible' && document.hasFocus());
+      const hidden =
+        document.visibilityState !== 'visible' || !document.hasFocus();
+      document.body.dataset.appHidden = hidden ? 'true' : 'false';
     };
     updateVisibility();
     window.addEventListener('focus', updateVisibility);
@@ -41,43 +38,10 @@ export const Shell: React.FC = () => {
     };
   }, []);
 
-  const animateAmbient = isAppVisible && !prefersReducedMotion;
-
   return (
     <div className="min-h-screen flex flex-col bg-[#06080d] text-slate-100 relative selection:bg-sky-500/30 selection:text-sky-200 overflow-hidden">
-      {/* Animated Ambient Light Mesh for Dynamic Frosted Glass Refraction */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <motion.div
-          animate={
-            animateAmbient
-              ? { x: [0, 30, -20, 0], y: [0, -30, 20, 0], scale: [1, 1.15, 0.95, 1] }
-              : undefined
-          }
-          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ willChange: 'transform' }}
-          className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-sky-500/10 blur-[100px]"
-        />
-        <motion.div
-          animate={
-            animateAmbient
-              ? { x: [0, -40, 20, 0], y: [0, 30, -30, 0], scale: [1, 1.1, 0.9, 1] }
-              : undefined
-          }
-          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ willChange: 'transform' }}
-          className="absolute top-1/3 -right-40 w-96 h-96 rounded-full bg-indigo-600/10 blur-[120px]"
-        />
-        <motion.div
-          animate={
-            animateAmbient
-              ? { x: [0, 25, -25, 0], y: [0, -25, 25, 0], scale: [1, 1.05, 0.95, 1] }
-              : undefined
-          }
-          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ willChange: 'transform' }}
-          className="absolute -bottom-40 left-1/3 w-96 h-96 rounded-full bg-emerald-500/08 blur-[110px]"
-        />
-      </div>
+      {/* Static Ambient Light Mesh (pre-blurred gradients, zero GPU cost) */}
+      <div className="glass-mesh-background" />
 
       {/* Top draggable titlebar matching Windows titlebarOverlay height, padded right for window controls */}
       <div className="h-9 w-full bg-black/40 backdrop-blur-xl border-b border-white/[0.07] flex items-center justify-between px-4 pr-36 text-xs text-slate-400 app-drag-region select-none relative z-20">

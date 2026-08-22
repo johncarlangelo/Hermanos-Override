@@ -13,7 +13,7 @@ export const EmptyLibrary: React.FC = () => {
         <div className="rounded-[calc(1.5rem-2px)] bg-[#0b101c]/80 backdrop-blur-2xl p-8 sm:p-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] flex flex-col items-center">
           {/* Glowing Center Glass Icon */}
           <div className="relative mb-6">
-            <div className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-sky-500/20 to-blue-600/20 blur-xl animate-pulse" />
+            <div className="absolute -inset-2 rounded-2xl bg-[radial-gradient(closest-side,rgba(56,189,248,0.18),transparent_75%)]" />
             <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-500/20 to-blue-600/10 border border-sky-400/30 flex items-center justify-center text-sky-400 shadow-[0_0_24px_rgba(56,189,248,0.3),inset_0_1px_0_rgba(255,255,255,0.2)]">
               <Gamepad2 className="w-8 h-8" />
             </div>
