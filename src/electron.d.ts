@@ -47,6 +47,7 @@ declare module 'electron' {
     isMinimized(): boolean;
     restore(): void;
     focus(): void;
+    getNormalBounds(): Rectangle;
     isDestroyed(): boolean;
     setTitleBarOverlay(options: any): void;
     loadURL(url: string): Promise<void>;
@@ -58,6 +59,25 @@ declare module 'electron' {
 
   export namespace protocol {
     export function handle(scheme: string, handler: (request: Request) => Promise<Response> | Response): void;
+  }
+
+  export interface Rectangle {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }
+
+  export interface Display {
+    id: number;
+    bounds: Rectangle;
+    workArea: Rectangle;
+  }
+
+  export namespace screen {
+    export function getPrimaryDisplay(): Display;
+    export function getAllDisplays(): Display[];
+    export function getDisplayMatching(rect: Rectangle): Display;
   }
 
   export namespace net {

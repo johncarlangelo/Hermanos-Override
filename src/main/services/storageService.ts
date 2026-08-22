@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import type { Game, AppSettings } from '../../shared/types';
+import type { Game, AppSettings, WindowState } from '../../shared/types';
 
 export interface StorageOptions {
   dataDir?: string;
@@ -14,6 +14,7 @@ export class StorageService {
   private dataDir: string;
   private gamesFilePath: string;
   private settingsFilePath: string;
+  private windowStateFilePath: string;
 
   constructor(options?: StorageOptions) {
     if (options?.dataDir) {
@@ -31,6 +32,7 @@ export class StorageService {
 
     this.gamesFilePath = path.join(this.dataDir, 'games.json');
     this.settingsFilePath = path.join(this.dataDir, 'settings.json');
+    this.windowStateFilePath = path.join(this.dataDir, 'window-state.json');
   }
 
   public getDataDir(): string {
@@ -187,5 +189,55 @@ export class StorageService {
   public async saveSettings(settings: AppSettings): Promise<void> {
     const json = JSON.stringify(settings, null, 2);
     await this.atomicWriteFile(this.settingsFilePath, json);
+  }
+
+  private isValidWindowState(value: any): value is WindowState {
+    return (
+      value &&
+      typeof value === 'object' &&
+      typeof value.width === 'number' &&
+      typeof value.height === 'number' &&
+      Number.isFinite(value.width) &&
+      Number.isFinite(value.height) &&
+      (value.isMaximized === undefined || typeof value.isMaximized === 'boolean')
+    );
+  }
+
+  public async loadWindowState(): Promise<WindowState | null> {
+    try {
+      if (!fs.existsSync(this.windowStateFilePath)) return null;
+      const raw = await fs.promises.readFile(this.windowStateFilePath, 'utf-8');
+      const parsed = JSON.parse(raw);
+      return this.isValidWindowState(parsed) ? parsed : null;
+    } catch (err) {
+      console.error('Failed to read window-state.json:', err);
+      return null;
+    }
+  }
+
+  /** Synchronous variant for final saves during window close/quit. */
+  public saveWindowStateSync(state: WindowState): void {
+    try {
+      this.ensureDirSync();
+      fs.writeFileSync(
+        this.windowStateFilePath,
+        JSON.stringify(state, null, 2),
+        'utf-8'
+      );
+    } catch (err) {
+      console.error('Failed to write window-state.json:', err);
+    }
+  }
+
+  public loadWindowStateSync(): WindowState | null {
+    try {
+      if (!fs.existsSync(this.windowStateFilePath)) return null;
+      const raw = fs.readFileSync(this.windowStateFilePath, 'utf-8');
+      const parsed = JSON.parse(raw);
+      return this.isValidWindowState(parsed) ? parsed : null;
+    } catch (err) {
+      console.error('Failed to read window-state.json:', err);
+      return null;
+    }
   }
 }

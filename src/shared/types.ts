@@ -93,3 +93,12 @@ export interface LibraryIOResult {
   canceled?: boolean;
   error?: string;
 }
+
+/** Persisted window geometry. Restored on launch when valid. */
+export interface WindowState {
+  width: number;
+  height: number;
+  x?: number;
+  y?: number;
+  isMaximized: boolean;
+}
