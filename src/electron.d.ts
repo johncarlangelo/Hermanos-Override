@@ -20,6 +20,7 @@ declare module 'electron' {
     export function quit(): void;
     export function getPath(name: string): string;
     export function on(event: string, listener: (...args: any[]) => void): void;
+    export function requestSingleInstanceLock(): boolean;
     export const isPackaged: boolean;
   }
 
@@ -37,6 +38,9 @@ declare module 'electron' {
     maximize(): void;
     unmaximize(): void;
     isMaximized(): boolean;
+    isMinimized(): boolean;
+    restore(): void;
+    focus(): void;
     isDestroyed(): boolean;
     setTitleBarOverlay(options: any): void;
     loadURL(url: string): Promise<void>;

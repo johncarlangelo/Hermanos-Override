@@ -17,27 +17,42 @@ export function registerIpcHandlers(
   storageService: StorageService,
   getMainWindow: () => BrowserWindow | null
 ): void {
+  // Basic payload guards so malformed renderer input can never reach the
+  // service layer with unexpected shapes.
+  const isNonEmptyString = (v: unknown): v is string =>
+    typeof v === 'string' && v.trim().length > 0;
+  const isPlainObject = (v: unknown): v is Record<string, unknown> =>
+    typeof v === 'object' && v !== null && !Array.isArray(v);
+
   // Games
   ipcMain.handle(IPC_CHANNELS.GAMES_LIST, async () => {
     return gameManager.listGames();
   });
 
   ipcMain.handle(IPC_CHANNELS.GAMES_CREATE, async (_event, input: CreateGameInput) => {
-    return gameManager.createGame(input);
+    if (!isPlainObject(input)) throw new Error('Invalid create payload');
+    return gameManager.createGame(input as CreateGameInput);
   });
 
   ipcMain.handle(
     IPC_CHANNELS.GAMES_UPDATE,
     async (_event, id: string, input: UpdateGameInput) => {
-      return gameManager.updateGame(id, input);
+      if (!isNonEmptyString(id) || !isPlainObject(input)) {
+        throw new Error('Invalid update payload');
+      }
+      return gameManager.updateGame(id, input as UpdateGameInput);
     }
   );
 
   ipcMain.handle(IPC_CHANNELS.GAMES_DELETE, async (_event, id: string) => {
+    if (!isNonEmptyString(id)) return false;
     return gameManager.deleteGame(id);
   });
 
   ipcMain.handle(IPC_CHANNELS.GAMES_GET_STATUS, async (_event, id: string) => {
+    if (!isNonEmptyString(id)) {
+      throw new Error('A valid game id is required');
+    }
     return gameManager.getGameStatus(id);
   });
 
@@ -47,6 +62,9 @@ export function registerIpcHandlers(
 
   // Trainer
   ipcMain.handle(IPC_CHANNELS.TRAINER_LAUNCH, async (_event, gameId: string) => {
+    if (!isNonEmptyString(gameId)) {
+      return { success: false, error: 'A valid game id is required' };
+    }
     const game = await gameManager.getGameById(gameId);
     if (!game) {
       return { success: false, error: 'Game not found' };
@@ -58,6 +76,9 @@ export function registerIpcHandlers(
   });
 
   ipcMain.handle(IPC_CHANNELS.TRAINER_STOP, async (_event, gameId: string) => {
+    if (!isNonEmptyString(gameId)) {
+      return { success: false, error: 'A valid game id is required' };
+    }
     return trainerManager.stopTrainer(gameId);
   });
 
@@ -73,6 +94,9 @@ export function registerIpcHandlers(
   ipcMain.handle(
     IPC_CHANNELS.DIALOG_SELECT_FILE,
     async (_event, options: SelectFileOptions) => {
+      if (options !== undefined && !isPlainObject(options)) {
+        throw new Error('Invalid dialog options');
+      }
       const win = getMainWindow();
       return DialogService.selectFile(win, options);
     }
@@ -86,6 +110,7 @@ export function registerIpcHandlers(
   ipcMain.handle(
     IPC_CHANNELS.SETTINGS_UPDATE,
     async (_event, newSettings: Partial<AppSettings>) => {
+      if (!isPlainObject(newSettings)) throw new Error('Invalid settings payload');
       const current = await storageService.loadSettings();
       const updated: AppSettings = {
         ...current,

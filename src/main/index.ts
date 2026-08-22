@@ -1,4 +1,5 @@
 import { app, BrowserWindow, protocol, net } from 'electron';
+import fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
 import { StorageService } from './services/storageService';
@@ -9,6 +10,26 @@ import { registerIpcHandlers } from './ipc/handlers';
 let mainWindow: BrowserWindow | null = null;
 
 const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
+
+const ALLOWED_ASSET_EXTENSIONS = new Set([
+  '.png',
+  '.jpg',
+  '.jpeg',
+  '.ico',
+  '.gif',
+  '.webp'
+]);
+
+function isAllowedAssetPath(rawPath: string): boolean {
+  try {
+    if (!path.isAbsolute(rawPath)) return false;
+    const resolved = path.resolve(rawPath);
+    const ext = path.extname(resolved).toLowerCase();
+    return ALLOWED_ASSET_EXTENSIONS.has(ext) && fs.existsSync(resolved);
+  } catch {
+    return false;
+  }
+}
 
 const storageService = new StorageService();
 const trainerManager = new TrainerManager();
@@ -63,10 +84,27 @@ function createWindow(): void {
   }
 }
 
-app.whenReady().then(() => {
-  // Register custom protocol for local asset loading under webSecurity
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  // Another instance is already running; focus it instead and exit.
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
+  app.whenReady().then(() => {
+  // Register custom protocol for local image assets under webSecurity.
+  // Security: only absolute paths to existing whitelisted image files are served,
+  // so a compromised renderer cannot exfiltrate arbitrary files from disk.
   protocol.handle('app-asset', (request) => {
     const rawPath = decodeURIComponent(request.url.replace(/^app-asset:\/\//, ''));
+    if (!isAllowedAssetPath(rawPath)) {
+      return new Response('Not Found', { status: 404 });
+    }
     try {
       return net.fetch(pathToFileURL(rawPath).toString());
     } catch (err) {
@@ -89,7 +127,8 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
-});
+  });
+}
 
 app.on('window-all-closed', () => {
   trainerManager.stopAll();

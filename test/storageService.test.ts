@@ -80,4 +80,43 @@ describe('StorageService', () => {
     const loaded = await storage.loadSettings();
     expect(loaded.theme).toBe('dark');
   });
+
+  it('backs up a corrupt games.json and returns an empty library', async () => {
+    fs.writeFileSync(storage.getGamesFilePath(), '{ this is not valid json', 'utf-8');
+
+    const games = await storage.loadGames();
+
+    expect(games).toEqual([]);
+    const files = fs.readdirSync(tempDir);
+    expect(files.some((f) => f.startsWith('games.json.corrupt-'))).toBe(true);
+  });
+
+  it('backs up games.json when its root is not an array', async () => {
+    fs.writeFileSync(storage.getGamesFilePath(), '{"id":"not-an-array"}', 'utf-8');
+
+    const games = await storage.loadGames();
+
+    expect(games).toEqual([]);
+    expect(fs.readdirSync(tempDir).some((f) => f.startsWith('games.json.corrupt-'))).toBe(true);
+  });
+
+  it('drops malformed records while keeping valid ones', async () => {
+    const raw = JSON.stringify([
+      { id: 'valid-1', name: 'Halo Infinite', gameExePath: 'C:\\Games\\halo.exe', createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z' },
+      null,
+      { name: 'Missing id and path' },
+      { id: '', name: 'Empty id', gameExePath: 'C:\\Games\\x.exe' },
+      { id: 'no-name', gameExePath: 'C:\\Games\\x.exe' },
+      'just a string',
+      { id: 'valid-2', name: 'Elden Ring', gameExePath: 'C:\\Games\\eldenring.exe', status: 'ready', trainerPid: 999 }
+    ]);
+    fs.writeFileSync(storage.getGamesFilePath(), raw, 'utf-8');
+
+    const games = await storage.loadGames();
+
+    expect(games.map((g) => g.id)).toEqual(['valid-1', 'valid-2']);
+    // Derived status must never leak through from disk
+    expect((games[1] as any).status).toBeUndefined();
+    expect((games[1] as any).trainerPid).toBeUndefined();
+  });
 });

@@ -69,6 +69,33 @@ export class StorageService {
     }
   }
 
+  private sanitizeGameRecord(item: any): Game | null {
+    if (!item || typeof item !== 'object') return null;
+    if (typeof item.id !== 'string' || !item.id.trim()) return null;
+    if (typeof item.name !== 'string' || !item.name.trim()) return null;
+    if (typeof item.gameExePath !== 'string' || !item.gameExePath.trim()) return null;
+
+    return {
+      id: item.id,
+      name: item.name,
+      gameExePath: item.gameExePath,
+      trainerExePath: typeof item.trainerExePath === 'string' && item.trainerExePath.trim() ? item.trainerExePath : undefined,
+      iconPath: typeof item.iconPath === 'string' && item.iconPath.trim() ? item.iconPath : undefined,
+      createdAt: typeof item.createdAt === 'string' ? item.createdAt : new Date().toISOString(),
+      updatedAt: typeof item.updatedAt === 'string' ? item.updatedAt : new Date().toISOString()
+    };
+  }
+
+  private backupCorruptFile(filePath: string): void {
+    try {
+      const backupPath = `${filePath}.corrupt-${Date.now()}`;
+      fs.copyFileSync(filePath, backupPath);
+      console.warn(`Backed up corrupt data file to: ${backupPath}`);
+    } catch (backupErr) {
+      console.error('Failed to back up corrupt data file:', backupErr);
+    }
+  }
+
   public async loadGames(): Promise<Game[]> {
     try {
       this.ensureDirSync();
@@ -79,23 +106,29 @@ export class StorageService {
       if (!raw.trim()) {
         return [];
       }
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) {
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (parseErr) {
+        // Preserve the corrupt file for manual recovery instead of silently
+        // losing the user's library on the next save.
+        console.error('games.json is corrupt:', parseErr);
+        this.backupCorruptFile(this.gamesFilePath);
         return [];
       }
-      // Ensure we sanitize each record to avoid persisted derived status
-      return parsed.map((item) => {
-        const { id, name, gameExePath, trainerExePath, iconPath, createdAt, updatedAt } = item;
-        return {
-          id,
-          name,
-          gameExePath,
-          trainerExePath: trainerExePath || undefined,
-          iconPath: iconPath || undefined,
-          createdAt: createdAt || new Date().toISOString(),
-          updatedAt: updatedAt || new Date().toISOString()
-        };
-      });
+      if (!Array.isArray(parsed)) {
+        console.error('games.json does not contain an array; backing up.');
+        this.backupCorruptFile(this.gamesFilePath);
+        return [];
+      }
+      // Sanitize each record to avoid persisted derived status and drop
+      // malformed entries rather than crashing or persisting garbage.
+      const games: Game[] = [];
+      for (const item of parsed) {
+        const sanitized = this.sanitizeGameRecord(item);
+        if (sanitized) games.push(sanitized);
+      }
+      return games;
     } catch (err) {
       console.error('Failed to read games.json:', err);
       return [];
