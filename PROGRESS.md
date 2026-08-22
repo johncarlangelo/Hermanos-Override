@@ -46,3 +46,16 @@ Discovered and inspected skills in workspace:
 ## Known Issues / Blockers
 
 None. The application is fully animated with Framer Motion and verified.
+
+### Phase 11 — Security, Resilience & Workflow Hardening
+- **app-asset protocol hardening:** Restricted the custom protocol to absolute, existing paths with whitelisted image extensions (.png/.jpg/.jpeg/.ico/.gif/.webp), preventing a compromised renderer from exfiltrating arbitrary files from disk.
+- **Single-instance lock:** Added pp.requestSingleInstanceLock(); a second launch focuses the existing window instead of creating a duplicate instance that could race on data files or trainer processes.
+- **Storage corruption recovery:** loadGames() now backs up corrupt or non-array games.json to a timestamped .corrupt-* file before returning an empty library (previously the next save would silently destroy the user's data) and drops malformed records while keeping valid ones; derived status fields can no longer leak back through disk loads. Extended Electron ambient typings accordingly.
+- **IPC payload validation:** All mutating IPC handlers now validate argument shapes before reaching the service layer.
+- **Status freshness:** The library re-evaluates dynamic status automatically when the window regains focus (ocus + isibilitychange), so moved/renamed/deleted executables are reflected without manual refresh.
+- **Keyboard shortcuts:** Added global Ctrl+N / Cmd+N to open the Add Game dialog alongside the existing Ctrl+K search shortcut.
+- **Library sorting:** Games are now sorted alphabetically (locale-aware, case-insensitive).
+- **Verification:** Verified with 
+pm run typecheck (0 errors), 
+pm test (39/39 tests passing, including 4 new storage-resilience tests), and 
+pm run build (clean production build).
