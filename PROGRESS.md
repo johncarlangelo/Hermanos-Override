@@ -88,3 +88,6 @@ pm run typecheck clean, 39/39 tests passing, production build clean.
 - **Window persistence:** Window size, position and maximized state are saved to window-state.json (debounced during move/resize, synchronously on close) and restored on launch, validated and clamped to the nearest attached display's work area so the window can never be restored off-screen after a monitor change.
 - **Verification:** 
 pm run typecheck clean, 39/39 tests passing, production build clean. A brief dev launch smoke test confirmed Electron starts without runtime errors (processes cleaned up afterwards).
+
+### Dark-Only UI Lock
+- Removed the light/dark/system ThemeToggle, ThemeContext, and the now-dead settings/titlebar-theme IPC surface (SETTINGS_GET/UPDATE, WINDOW_SET_TITLEBAR_THEME). The application UI is locked to dark mode per product decision; Gate 15 now verifies no theme-switching controls are present instead of testing theme switching.
