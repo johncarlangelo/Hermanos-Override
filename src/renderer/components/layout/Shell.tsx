@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Header } from './Header';
 import { GameGrid } from '../library/GameGrid';
 import { GameModal } from '../forms/GameModal';
@@ -20,47 +20,61 @@ export const Shell: React.FC = () => {
     clearNotification
   } = useLibrary();
 
+  const prefersReducedMotion = useReducedMotion();
+  const [isAppVisible, setIsAppVisible] = useState(true);
+
+  // Perf: the ambient light orbs are large blurred surfaces that repaint
+  // continuously. Pause them whenever the window loses focus (e.g. while the
+  // user is in-game) and for users who prefer reduced motion.
+  useEffect(() => {
+    const updateVisibility = () => {
+      setIsAppVisible(document.visibilityState === 'visible' && document.hasFocus());
+    };
+    updateVisibility();
+    window.addEventListener('focus', updateVisibility);
+    window.addEventListener('blur', updateVisibility);
+    document.addEventListener('visibilitychange', updateVisibility);
+    return () => {
+      window.removeEventListener('focus', updateVisibility);
+      window.removeEventListener('blur', updateVisibility);
+      document.removeEventListener('visibilitychange', updateVisibility);
+    };
+  }, []);
+
+  const animateAmbient = isAppVisible && !prefersReducedMotion;
+
   return (
     <div className="min-h-screen flex flex-col bg-[#06080d] text-slate-100 relative selection:bg-sky-500/30 selection:text-sky-200 overflow-hidden">
       {/* Animated Ambient Light Mesh for Dynamic Frosted Glass Refraction */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <motion.div
-          animate={{
-            x: [0, 30, -20, 0],
-            y: [0, -30, 20, 0],
-            scale: [1, 1.15, 0.95, 1]
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: 'easeInOut'
-          }}
+          animate={
+            animateAmbient
+              ? { x: [0, 30, -20, 0], y: [0, -30, 20, 0], scale: [1, 1.15, 0.95, 1] }
+              : undefined
+          }
+          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ willChange: 'transform' }}
           className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-sky-500/10 blur-[100px]"
         />
         <motion.div
-          animate={{
-            x: [0, -40, 20, 0],
-            y: [0, 30, -30, 0],
-            scale: [1, 1.1, 0.9, 1]
-          }}
-          transition={{
-            duration: 22,
-            repeat: Infinity,
-            ease: 'easeInOut'
-          }}
+          animate={
+            animateAmbient
+              ? { x: [0, -40, 20, 0], y: [0, 30, -30, 0], scale: [1, 1.1, 0.9, 1] }
+              : undefined
+          }
+          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ willChange: 'transform' }}
           className="absolute top-1/3 -right-40 w-96 h-96 rounded-full bg-indigo-600/10 blur-[120px]"
         />
         <motion.div
-          animate={{
-            x: [0, 25, -25, 0],
-            y: [0, -25, 25, 0],
-            scale: [1, 1.05, 0.95, 1]
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: 'easeInOut'
-          }}
+          animate={
+            animateAmbient
+              ? { x: [0, 25, -25, 0], y: [0, -25, 25, 0], scale: [1, 1.05, 0.95, 1] }
+              : undefined
+          }
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ willChange: 'transform' }}
           className="absolute -bottom-40 left-1/3 w-96 h-96 rounded-full bg-emerald-500/08 blur-[110px]"
         />
       </div>
