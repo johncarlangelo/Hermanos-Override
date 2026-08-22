@@ -1,8 +1,16 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLibrary } from '../../context/LibraryContext';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from '../ui/Button';
-import { Plus, Search, RefreshCw, X, ShieldAlert } from 'lucide-react';
+import {
+  Plus,
+  Search,
+  RefreshCw,
+  X,
+  ShieldAlert,
+  Download,
+  Upload
+} from 'lucide-react';
 
 export const Header: React.FC = () => {
   const {
@@ -12,10 +20,14 @@ export const Header: React.FC = () => {
     setSearchQuery,
     refreshGames,
     isLoading,
-    setIsAddModalOpen
+    setIsAddModalOpen,
+    exportLibrary,
+    importLibrary
   } = useLibrary();
 
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [isExporting, setIsExporting] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
 
   // Global keyboard shortcuts: Ctrl+K/Cmd+K focus search, Ctrl+N/Cmd+N add game
   useEffect(() => {
@@ -119,6 +131,40 @@ export const Header: React.FC = () => {
             className="p-2.5 rounded-xl text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] active:bg-white/[0.12] border border-white/10 transition-all duration-200 disabled:opacity-40 cursor-pointer shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-sky-400' : ''}`} />
+          </button>
+
+          {/* Library Export / Import */}
+          <button
+            onClick={async () => {
+              setIsExporting(true);
+              try {
+                await exportLibrary();
+              } finally {
+                setIsExporting(false);
+              }
+            }}
+            disabled={isExporting || isImporting || games.length === 0}
+            title="Export library backup (.json)"
+            aria-label="Export library"
+            className="p-2.5 rounded-xl text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] active:bg-white/[0.12] border border-white/10 transition-all duration-200 disabled:opacity-40 cursor-pointer shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+          >
+            <Download className={`w-4 h-4 ${isExporting ? 'animate-pulse text-sky-400' : ''}`} />
+          </button>
+          <button
+            onClick={async () => {
+              setIsImporting(true);
+              try {
+                await importLibrary();
+              } finally {
+                setIsImporting(false);
+              }
+            }}
+            disabled={isExporting || isImporting}
+            title="Import library backup (.json)"
+            aria-label="Import library"
+            className="p-2.5 rounded-xl text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] active:bg-white/[0.12] border border-white/10 transition-all duration-200 disabled:opacity-40 cursor-pointer shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+          >
+            <Upload className={`w-4 h-4 ${isImporting ? 'animate-pulse text-sky-400' : ''}`} />
           </button>
 
           {/* Theme Mode Indicator/Toggle */}

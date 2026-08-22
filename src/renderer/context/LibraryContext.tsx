@@ -4,13 +4,16 @@ import React, {
   useEffect,
   useState,
   useCallback,
-  useMemo
+  useMemo,
+  useRef
 } from 'react';
 import type {
   GameWithStatus,
   CreateGameInput,
   UpdateGameInput,
-  TrainerStatusChangeEvent
+  TrainerStatusChangeEvent,
+  AppNotification,
+  StatusFilter
 } from '../../shared/types';
 
 interface LibraryContextType {
@@ -18,17 +21,21 @@ interface LibraryContextType {
   filteredGames: GameWithStatus[];
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  statusFilter: StatusFilter;
+  setStatusFilter: (filter: StatusFilter) => void;
   isLoading: boolean;
   error: string | null;
-  notification: { type: 'success' | 'error' | 'info'; message: string } | null;
-  clearNotification: () => void;
+  notifications: AppNotification[];
+  dismissNotification: (id: number) => void;
   refreshGames: () => Promise<void>;
   createGame: (input: CreateGameInput) => Promise<GameWithStatus>;
   updateGame: (id: string, input: UpdateGameInput) => Promise<GameWithStatus>;
   deleteGame: (id: string) => Promise<boolean>;
   launchTrainer: (gameId: string) => Promise<boolean>;
   stopTrainer: (gameId: string) => Promise<boolean>;
-  
+  exportLibrary: () => Promise<LibraryIOResultLike>;
+  importLibrary: () => Promise<LibraryIOResultLike>;
+
   // Modal states
   isAddModalOpen: boolean;
   setIsAddModalOpen: (open: boolean) => void;
@@ -38,25 +45,42 @@ interface LibraryContextType {
   setDeletingGame: (game: GameWithStatus | null) => void;
 }
 
+type LibraryIOResultLike = {
+  success: boolean;
+  count?: number;
+  path?: string;
+  canceled?: boolean;
+  error?: string;
+};
+
 const LibraryContext = createContext<LibraryContextType | undefined>(undefined);
 
 export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [games, setGames] = useState<GameWithStatus[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [notification, setNotification] = useState<{
-    type: 'success' | 'error' | 'info';
-    message: string;
-  } | null>(null);
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
+  const nextNotificationId = useRef(0);
 
   // Modal controls
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingGame, setEditingGame] = useState<GameWithStatus | null>(null);
   const [deletingGame, setDeletingGame] = useState<GameWithStatus | null>(null);
 
-  const clearNotification = useCallback(() => {
-    setNotification(null);
+  /** Queue a toast notification (stacked, auto-dismissed by the Toast UI). */
+  const notify = useCallback(
+    (type: AppNotification['type'], message: string): number => {
+      const id = ++nextNotificationId.current;
+      setNotifications((prev) => [...prev.slice(-4), { id, type, message }]);
+      return id;
+    },
+    []
+  );
+
+  const dismissNotification = useCallback((id: number) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
   }, []);
 
   const refreshGames = useCallback(async () => {
@@ -118,17 +142,14 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         );
 
         if (event.unexpectedExit) {
-          setNotification({
-            type: 'error',
-            message: event.error || 'Trainer process exited unexpectedly.'
-          });
+          notify('error', event.error || 'Trainer process exited unexpectedly.');
           refreshGames();
         }
       }
     );
 
     return cleanup;
-  }, []);
+  }, [refreshGames, notify]);
 
   const createGame = async (input: CreateGameInput): Promise<GameWithStatus> => {
     if (!window.electronAPI) {
@@ -137,16 +158,10 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       const created = await window.electronAPI.createGame(input);
       setGames((prev) => [...prev, created]);
-      setNotification({
-        type: 'success',
-        message: `Added "${created.name}" to library.`
-      });
+      notify('success', `Added "${created.name}" to library.`);
       return created;
     } catch (err: any) {
-      setNotification({
-        type: 'error',
-        message: err?.message || 'Failed to create game'
-      });
+      notify('error', err?.message || 'Failed to create game');
       throw err;
     }
   };
@@ -161,16 +176,10 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       const updated = await window.electronAPI.updateGame(id, input);
       setGames((prev) => prev.map((g) => (g.id === id ? updated : g)));
-      setNotification({
-        type: 'success',
-        message: `Updated "${updated.name}".`
-      });
+      notify('success', `Updated "${updated.name}".`);
       return updated;
     } catch (err: any) {
-      setNotification({
-        type: 'error',
-        message: err?.message || 'Failed to update game'
-      });
+      notify('error', err?.message || 'Failed to update game');
       throw err;
     }
   };
@@ -184,17 +193,14 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const success = await window.electronAPI.deleteGame(id);
       if (success) {
         setGames((prev) => prev.filter((g) => g.id !== id));
-        setNotification({
-          type: 'info',
-          message: target ? `Removed "${target.name}" from library.` : 'Game removed.'
-        });
+        notify(
+          'info',
+          target ? `Removed "${target.name}" from library.` : 'Game removed.'
+        );
       }
       return success;
     } catch (err: any) {
-      setNotification({
-        type: 'error',
-        message: err?.message || 'Failed to delete game'
-      });
+      notify('error', err?.message || 'Failed to delete game');
       throw err;
     }
   };
@@ -213,17 +219,11 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         );
         return true;
       } else {
-        setNotification({
-          type: 'error',
-          message: result.error || 'Failed to launch trainer'
-        });
+        notify('error', result.error || 'Failed to launch trainer');
         return false;
       }
     } catch (err: any) {
-      setNotification({
-        type: 'error',
-        message: err?.message || 'An error occurred launching trainer'
-      });
+      notify('error', err?.message || 'An error occurred launching trainer');
       return false;
     }
   };
@@ -244,31 +244,72 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         );
         return true;
       } else {
-        setNotification({
-          type: 'error',
-          message: result.error || 'Failed to stop trainer'
-        });
+        notify('error', result.error || 'Failed to stop trainer');
         return false;
       }
     } catch (err: any) {
-      setNotification({
-        type: 'error',
-        message: err?.message || 'An error occurred stopping trainer'
-      });
+      notify('error', err?.message || 'An error occurred stopping trainer');
       return false;
     }
   };
 
-  // Filtered games based on search query (case-insensitive), alphabetically sorted
+  const exportLibrary = async (): Promise<LibraryIOResultLike> => {
+    if (!window.electronAPI?.exportLibrary) {
+      return { success: false, error: 'Electron API not available' };
+    }
+    const result = await window.electronAPI.exportLibrary();
+    if (result.success) {
+      notify(
+        'success',
+        `Exported ${result.count} game${result.count === 1 ? '' : 's'} to library backup.`
+      );
+    } else if (!result.canceled) {
+      notify('error', result.error || 'Failed to export library');
+    }
+    return result;
+  };
+
+  const importLibrary = async (): Promise<LibraryIOResultLike> => {
+    if (!window.electronAPI?.importLibrary) {
+      return { success: false, error: 'Electron API not available' };
+    }
+    const result = await window.electronAPI.importLibrary();
+    if (result.success) {
+      await refreshGames();
+      notify(
+        'success',
+        `Imported ${result.count} game${result.count === 1 ? '' : 's'}. Library replaced.`
+      );
+    } else if (!result.canceled) {
+      notify('error', result.error || 'Failed to import library');
+    }
+    return result;
+  };
+
+  // Filtered games based on search query + status filter, alphabetically sorted
   const filteredGames = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
-    const matches = query
+    let matches = query
       ? games.filter((g) => g.name.toLowerCase().includes(query))
       : games;
+
+    if (statusFilter !== 'all') {
+      matches = matches.filter((g) => {
+        switch (statusFilter) {
+          case 'ready':
+            return g.status === 'ready';
+          case 'running':
+            return g.status === 'trainer_running';
+          case 'missing':
+            return g.status === 'missing_game' || g.status === 'missing_trainer';
+        }
+      });
+    }
+
     return [...matches].sort((a, b) =>
       a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
     );
-  }, [games, searchQuery]);
+  }, [games, searchQuery, statusFilter]);
 
   return (
     <LibraryContext.Provider
@@ -277,16 +318,20 @@ export const LibraryProvider: React.FC<{ children: React.ReactNode }> = ({ child
         filteredGames,
         searchQuery,
         setSearchQuery,
+        statusFilter,
+        setStatusFilter,
         isLoading,
         error,
-        notification,
-        clearNotification,
+        notifications,
+        dismissNotification,
         refreshGames,
         createGame,
         updateGame,
         deleteGame,
         launchTrainer,
         stopTrainer,
+        exportLibrary,
+        importLibrary,
         isAddModalOpen,
         setIsAddModalOpen,
         editingGame,

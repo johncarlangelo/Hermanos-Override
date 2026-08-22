@@ -1,7 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../lib/utils';
 import { X } from 'lucide-react';
+
+const FOCUSABLE_SELECTOR =
+  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function getFocusables(container: HTMLElement): HTMLElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+  ).filter((el) => el.checkVisibility?.() ?? true);
+}
 
 export interface ModalProps {
   isOpen: boolean;
@@ -22,12 +31,67 @@ export const Modal: React.FC<ModalProps> = ({
   footer,
   maxWidth = 'md'
 }) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  // Focus management: move focus into the dialog on open (preferring the
+  // first form field), restore it to the trigger element on close.
   useEffect(() => {
+    if (!isOpen) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
+    const raf = requestAnimationFrame(() => {
+      const container = dialogRef.current;
+      if (!container) return;
+      const focusables = getFocusables(container);
+      const formField = focusables.find((el) =>
+        ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)
+      );
+      (formField || focusables[0])?.focus();
+    });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      previouslyFocused?.focus?.();
+    };
+  }, [isOpen]);
+
+  // Keyboard behavior: Escape closes; Tab is trapped inside the dialog.
+  useEffect(() => {
+    if (!isOpen) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      const container = dialogRef.current;
+      if (!container) return;
+
+      if (e.key === 'Escape') {
+        e.stopPropagation();
         onClose();
+        return;
+      }
+
+      if (e.key !== 'Tab') return;
+
+      const focusables = getFocusables(container);
+      if (focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      const insideDialog = active ? container.contains(active) : false;
+
+      if (e.shiftKey) {
+        if (active === first || !insideDialog) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (active === last || !insideDialog) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
@@ -56,6 +120,7 @@ export const Modal: React.FC<ModalProps> = ({
 
           {/* Modal Dialog Window with Spring Physics */}
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-title"

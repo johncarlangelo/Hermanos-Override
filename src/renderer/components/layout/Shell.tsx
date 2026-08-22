@@ -16,8 +16,8 @@ export const Shell: React.FC = () => {
     setEditingGame,
     deletingGame,
     setDeletingGame,
-    notification,
-    clearNotification
+    notifications,
+    dismissNotification
   } = useLibrary();
 
   const prefersReducedMotion = useReducedMotion();
@@ -131,8 +131,8 @@ export const Shell: React.FC = () => {
         game={deletingGame}
       />
 
-      {/* Notifications */}
-      <Toast notification={notification} onClose={clearNotification} />
+      {/* Notifications (stacked toast queue) */}
+      <Toast notifications={notifications} onDismiss={dismissNotification} />
     </div>
   );
 };
