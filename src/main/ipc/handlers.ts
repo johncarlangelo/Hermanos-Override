@@ -10,6 +10,8 @@ import { GameManager } from '../services/gameManager';
 import { TrainerManager } from '../services/trainerManager';
 import { StorageService } from '../services/storageService';
 import { DialogService } from '../services/dialogService';
+import { extractGameIcon } from '../services/iconService';
+import type { GameWithStatus } from '../../shared/types';
 
 export function registerIpcHandlers(
   gameManager: GameManager,
@@ -24,6 +26,21 @@ export function registerIpcHandlers(
   const isPlainObject = (v: unknown): v is Record<string, unknown> =>
     typeof v === 'object' && v !== null && !Array.isArray(v);
 
+  // Best-effort: pull the embedded icon out of the game executable when no
+  // custom icon is set, saving the user a manual icon-picker step.
+  const ensureAutoIcon = async (
+    game: GameWithStatus
+  ): Promise<GameWithStatus> => {
+    if (game.iconPath) return game;
+    const extracted = await extractGameIcon(
+      storageService.getDataDir(),
+      game.id,
+      game.gameExePath
+    );
+    if (!extracted) return game;
+    return gameManager.updateGame(game.id, { iconPath: extracted });
+  };
+
   // Games
   ipcMain.handle(IPC_CHANNELS.GAMES_LIST, async () => {
     return gameManager.listGames();
@@ -31,7 +48,8 @@ export function registerIpcHandlers(
 
   ipcMain.handle(IPC_CHANNELS.GAMES_CREATE, async (_event, input: CreateGameInput) => {
     if (!isPlainObject(input)) throw new Error('Invalid create payload');
-    return gameManager.createGame(input as CreateGameInput);
+    const created = await gameManager.createGame(input as CreateGameInput);
+    return ensureAutoIcon(created);
   });
 
   ipcMain.handle(
@@ -40,7 +58,13 @@ export function registerIpcHandlers(
       if (!isNonEmptyString(id) || !isPlainObject(input)) {
         throw new Error('Invalid update payload');
       }
-      return gameManager.updateGame(id, input as UpdateGameInput);
+      let updated = await gameManager.updateGame(id, input as UpdateGameInput);
+      // Re-extract the embedded icon when the executable changed, unless the
+      // user made an explicit icon decision (set or cleared) in this update.
+      if (updated.gameExePath && input.iconPath === undefined) {
+        updated = await ensureAutoIcon(updated);
+      }
+      return updated;
     }
   );
 
