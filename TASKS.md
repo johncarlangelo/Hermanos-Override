@@ -148,3 +148,25 @@ Do not mark parent tasks complete while child requirements remain unverified.
 - [x] Implement spring physics on Modal dialog entrances and dismissals (`AnimatePresence`).
 - [x] Implement spring slide-in and exit animations on Toast notifications.
 - [x] Verify test suite and TypeScript compilation with zero animation-induced test regressions.
+
+# Phase 11 — Security, Resilience & Workflow Hardening
+
+- [x] Restrict the `app-asset` protocol to whitelisted image files at absolute paths.
+- [x] Add a single-instance application lock with second-instance focus behavior.
+- [x] Back up corrupt `games.json` before recovery and drop malformed records safely.
+- [x] Validate IPC handler payload shapes before reaching the service layer.
+- [x] Re-evaluate dynamic status automatically when the window regains focus.
+- [x] Add global `Ctrl+N` Add Game shortcut alongside `Ctrl+K` search.
+- [x] Sort the library alphabetically.
+- [x] Extend storage-resilience unit tests and re-run full verification.
+
+# Phase 12 — Icon Automation, Safety & Distribution
+
+- [x] Auto-extract the embedded icon from game executables via `app.getFileIcon`.
+- [x] Persist extracted icons under `%APPDATA%\Hermanos Override\data\icons\`.
+- [x] Re-extract icons when the game executable changes unless the user explicitly set or cleared an icon.
+- [x] Confirm before closing the app while trainer processes are active.
+- [x] Pause ambient background animations when the window is unfocused or reduced motion is preferred.
+- [x] Remove per-card backdrop-filter GPU cost without visual regression.
+- [x] Configure electron-builder packaging (NSIS installer + portable executable).
+- [x] Verify packaged application launches successfully.

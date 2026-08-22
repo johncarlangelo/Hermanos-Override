@@ -59,3 +59,15 @@ None. The application is fully animated with Framer Motion and verified.
 pm run typecheck (0 errors), 
 pm test (39/39 tests passing, including 4 new storage-resilience tests), and 
 pm run build (clean production build).
+
+### Phase 12 — Icon Automation, Safety & Distribution
+- **Automatic game icons:** New iconService extracts the embedded icon from the configured game .exe via Electron's pp.getFileIcon (large size) and stores it as PNG under %APPDATA%\Hermanos Override\data\icons\<gameId>.png. Runs on create, and on update whenever the executable changes — unless the user explicitly set or cleared a custom icon in the same edit. Eliminates the manual icon-picker step for most games.
+- **Quit safety:** Closing the window while trainers are active now shows a native confirmation dialog ("Stop trainers & exit" / "Cancel") instead of silently terminating processes; TrainerManager.stopAll() is now awaitable and exposes getRunningCount().
+- **Performance:** Ambient light orbs are paused when the window loses focus/visibility (the common in-game scenario) and for users with reduced-motion preferences; per-card ackdrop-filter was removed (cards sit over an opaque canvas, so it was pure GPU waste). This addresses perceived lag beyond normal dev-mode overhead (
+pm run dev serves unminified modules with HMR; production build is faster).
+- **Distribution:** Added electron-builder configuration producing both an NSIS installer (elease/Hermanos Override-Setup-1.0.0.exe) and a portable executable (elease/Hermanos Override-Portable-1.0.0.exe) via 
+pm run dist.
+- **Verification:** Verified with 
+pm run typecheck (0 errors), 
+pm test (39/39), 
+pm run dist (clean packaging), and a launch test of elease/win-unpacked/Hermanos Override.exe (process started and stayed alive).
